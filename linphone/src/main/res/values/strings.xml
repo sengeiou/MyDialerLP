@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-
+	<string name="dialog_image_camear">Photograph</string>
+	<string name="dialog_image_picture">Choose from Gallery</string>
 	<!-- Custom -->
 	<string name="app_name">Linphone</string>
 	<string name="service_name">Linphone Service</string>

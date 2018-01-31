@@ -1427,7 +1427,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		doNotGoToCallActivity = false;
 
 		//add by wzb
-		moveTaskToBack(true);
+		//moveTaskToBack(true);
 
 	}
 
@@ -1446,7 +1446,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		//end
 
 		unbindDrawables(findViewById(R.id.topLayout));
-		System.gc();
+		//System.gc();//del by wzb
 	}
 
 	private void unbindDrawables(View view) {

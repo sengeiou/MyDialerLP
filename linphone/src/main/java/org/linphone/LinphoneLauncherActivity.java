@@ -33,6 +33,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+
 /**
  * 
  * Launch Linphone main activity when Service is ready.
@@ -90,9 +91,9 @@ public class LinphoneLauncherActivity extends Activity {
 
 				LinphoneManager.getInstance().newOutgoingCall(to, "Test Sip");
 
-				startActivity(new Intent()
-						.setClass(this, LinphoneActivity.class)
-						.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+				//startActivity(new Intent()
+				//		.setClass(this, LinphoneActivity.class)
+				//		.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 				finish();
 			}
 		} catch (LinphoneCoreException e) {
@@ -121,6 +122,7 @@ public class LinphoneLauncherActivity extends Activity {
 		} else {
 			classToStart = LinphoneActivity.class;
 		}
+
 
 		// We need LinphoneService to start bluetoothManager
 		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {

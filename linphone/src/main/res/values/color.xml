@@ -13,5 +13,65 @@
     <color name="colorK">#3eb5c0</color>
     <color name="colorL">#96c11f</color>
 
+
+    <color name="light_blue">#5CACEE</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="blue">#0F9CE4</color>
+    <color name="shallow_blue">#0F9CE4</color>
+    <color name="dark_grey">#424451</color>
+    <color name="divider">#595B68</color>
+    <color name="griditems_bg">#ffe8ecef</color>
+    <color name="commo_text_color">#ff333333</color>
+    <color name="line">#ffd3dde6</color>
+    <!-- 透明 -->
     <color name="transparent">#00000000</color>
+
+
+    <color name="btn_default">#B0C4DE</color>
+    <!-- 背景灰-->
+    <color name="background_gray">#fff0f0f0</color>
+    <color name="gray">#AAAA</color>
+    <color name="line_grey">#33999999</color>
+    <!-- 字体灰色 -->
+    <color name="font_color_gray">#999999</color>
+    <!-- 登录logo名字颜色 -->
+    <color name="login_logo_name">#48CFA0</color>
+    <!-- 登录hint颜色 -->
+    <color name="login_hite">#D9D9D9</color>
+
+    <!-- 登录文本框颜色 -->
+    <color name="font_color_default">#323232</color>
+    <!-- 字体默认绿色色 -->
+    <color name="font_color_green_default">#48CFA0</color>
+
+    <!-- 注册背景 -->
+    <color name="register_bg">#F8F8F8</color>
+
+
+    <!-- 数据item标题 -->
+    <color name="data_title">#565656</color>
+
+    <!-- 资讯item标题 -->
+    <color name="new_item_title">#0A0A0A</color>
+
+
+    <color name="title_background">#48cfa0</color>
+    <color name="btn_click_after">#3bae86</color>
+
+
+    <!-- 线 -->
+    <color name="line_default">#D3D3D3</color>
+
+    <!-- 脉搏字体颜色 -->
+    <color name="data_pulse">#A2A2A2</color>
+    <!-- 脉搏字体颜色 -->
+    <color name="red">#FF4040</color>
+    <!-- 脉搏字体颜色 -->
+    <color name="border_green">#22B380</color>
+
+    <color name="btn_cancel_color">#999999</color>
+    <color name="btn_confirm_color">#303F9F</color>
+
+    <color name="dialog_title">#33000000</color>
 </resources>
