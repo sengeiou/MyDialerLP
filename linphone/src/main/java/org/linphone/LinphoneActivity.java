@@ -53,6 +53,7 @@ import org.linphone.mediastream.Log;
 import org.linphone.purchase.InAppPurchaseActivity;
 import org.linphone.ui.AddressText;
 import org.linphone.wzb.CommonAction;
+import org.linphone.wzb.Wlog;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;
 
@@ -63,6 +64,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -149,10 +151,21 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		throw new RuntimeException("LinphoneActivity not instantiated yet");
 	}
 
+	private void gotoDialtactsActivity(){
+		Intent intent = new Intent();
+		ComponentName comp = new ComponentName("com.android.dialer","com.android.dialer.DialtactsActivity");
+		intent.setComponent(comp);
+		intent.setAction("android.intent.action.MAIN");
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		//This must be done before calling super.onCreate().
 		super.onCreate(savedInstanceState);
+
 
         if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -254,15 +267,15 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				android.util.Log.e("wzb","state:"+state.value());
 				if (state == State.IncomingReceived) {
 
-					//startActivity(new Intent(LinphoneActivity.instance(), CallIncomingActivity.class));
-					sendBroadcast(new Intent(CommonAction.CUSTOM_ACTION_GOTO_CALLINCOMING));
+					startActivity(new Intent(LinphoneActivity.instance(), CallIncomingActivity.class));
+					//sendBroadcast(new Intent(CommonAction.CUSTOM_ACTION_GOTO_CALLINCOMING));
 				} else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
 
-					//startActivity(new Intent(LinphoneActivity.instance(), CallOutgoingActivity.class));
-					sendBroadcast(new Intent(CommonAction.CUSTOM_ACTION_GOTO_CALLOUTGOING));
+					startActivity(new Intent(LinphoneActivity.instance(), CallOutgoingActivity.class));
+					//sendBroadcast(new Intent(CommonAction.CUSTOM_ACTION_GOTO_CALLOUTGOING));
 				} else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
-					//resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
-					sendBroadcast(new Intent(CommonAction.CUSTOM_ACTION_GOTO_GoBackToCallIfStillRunning));
+					resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
+					//sendBroadcast(new Intent(CommonAction.CUSTOM_ACTION_GOTO_GoBackToCallIfStillRunning));
 				}
 
 				int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
@@ -292,8 +305,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		LinphoneManager.getLc().setDeviceRotation(rotation);
 		mAlwaysChangingPhoneAngle = rotation;
 
-		//add by wzb
-		addListener(true);
 	}
 
 	private void initButtons() {
@@ -1138,12 +1149,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	@Override
 	protected void onPause() {
+		Wlog.e("linphoneActivity onPause");
 		getIntent().putExtra("PreviousActivity", 0);
 
-	/*	LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
-		}*/ //del by wzb
+		}
 		callTransfer = false;
 
 		super.onPause();
@@ -1369,15 +1381,21 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Wlog.e("LinphoneActivity onResume");
+		//add by wzb
+		//add by wzb
+		gotoDialtactsActivity();
+		finish();
+		//end
 
 		if (!LinphoneService.isReady()) {
 			startService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
 		}
 
-	/*	LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
-		}*/ //del by wzb
+		}
 
 		if (isTablet()) {
 			// Prevent fragmentContainer2 to be visible when rotating the device
@@ -1441,12 +1459,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		instance = null;
 		super.onDestroy();
 
-		//add by wzb
-		addListener(false);
-		//end
-
 		unbindDrawables(findViewById(R.id.topLayout));
-		//System.gc();//del by wzb
+		System.gc();
 	}
 
 	private void unbindDrawables(View view) {

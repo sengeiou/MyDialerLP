@@ -28,6 +28,9 @@ import com.android.dialer.database.FilteredNumberAsyncQueryHandler;
 import com.android.dialer.filterednumber.BlockedNumbersAutoMigrator;
 import com.umeng.analytics.MobclickAgent;
 
+import org.linphone.LinphoneApplication;
+import org.linphone.wzb.Wlog;
+
 public class DialerApplication extends Application {
 
     private static final String TAG = "DialerApplication";
@@ -47,6 +50,7 @@ public class DialerApplication extends Application {
         Trace.endSection();
 
         MobclickAgent.setDebugMode(true);
+        initLinphone();
     }
 
     @Nullable
@@ -57,5 +61,10 @@ public class DialerApplication extends Application {
     @NeededForTesting
     public static void setContextForTest(Context context) {
         sContext = context;
+    }
+
+    private void initLinphone(){
+        Wlog.e("DialerApplication init");
+        LinphoneApplication.init(sContext);
     }
 }

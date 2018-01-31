@@ -30,10 +30,12 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
+import org.linphone.wzb.Wlog;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -303,11 +305,20 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 			// the above method takes care of Samsung Galaxy S
 			Toast.makeText(this, R.string.couldnt_accept_call, Toast.LENGTH_LONG).show();
 		} else {
+			Wlog.e("CallIncomingActivity answer");
+			//modify by wzb
+			LinphoneApplication.curCall=mCall;
+
+			Intent intent=new Intent("com.custom.lp.CALLINCOMING_ANSWER");
+			sendBroadcast(intent);
+			/*
 			if (!LinphoneActivity.isInstanciated()) {
 				return;
 			}
 			LinphoneManager.getInstance().routeAudioToReceiver();
 			LinphoneActivity.instance().startIncallActivity(mCall);
+			*/
+			//
 		}
 	}
 

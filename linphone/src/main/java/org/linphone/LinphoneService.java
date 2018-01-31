@@ -38,6 +38,7 @@ import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.ui.LinphoneOverlay;
+import org.linphone.wzb.Wlog;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -831,9 +832,13 @@ public final class LinphoneService extends Service {
 	
 	protected void onIncomingReceived() {
 		//wakeup linphone
-		startActivity(new Intent()
-				.setClass(this, incomingReceivedActivity)
-				.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+		Wlog.e("LinphoneService onIncomingReceived");
+		//modify by wzb
+		//startActivity(new Intent()
+		//		.setClass(this, incomingReceivedActivity)
+		//		.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+		sendBroadcast(new Intent("com.custom.lp.IncomingReceived"));
+		//end
 	}
 
 

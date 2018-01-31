@@ -373,5 +373,15 @@
             android:exported="false"
             android:multiprocess="false"
             />
+
+        <receiver android:name=".wzb.DialerCoreReceiver">
+            <intent-filter>
+                <action android:name="com.custom.lp.CALLINCOMING_ANSWER"/>
+                <action android:name="com.custom.lp.CALLOUTGOING"/>
+                <action android:name="com.custom.lp.NetWork_err"/>
+
+                <action android:name="com.custom.lp.IncomingReceived"/>
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

@@ -16,6 +16,7 @@
 
 package com.android.dialer;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.ActivityNotFoundException;
@@ -94,6 +95,30 @@ import com.android.dialerbind.ObjectFactory;
 import com.android.phone.common.animation.AnimUtils;
 import com.android.phone.common.animation.AnimationListenerAdapter;
 import com.google.common.annotations.VisibleForTesting;
+
+import org.linphone.CallActivity;
+import org.linphone.CallIncomingActivity;
+import org.linphone.CallOutgoingActivity;
+import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneLauncherActivity;
+import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
+import org.linphone.LinphoneService;
+import org.linphone.assistant.AssistantActivity;
+import org.linphone.core.LinphoneAuthInfo;
+import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatRoom;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.Reason;
+import org.linphone.wzb.CommonAction;
+import org.linphone.wzb.Wlog;
+//add by wzb
+import org.linphone.core.LinphoneCall.State;
+import org.linphone.wzb.util.ToastUtil;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -246,6 +271,23 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
      */
     private String mVoiceSearchQuery;
 
+    //add by wzb
+    private LinphoneCoreListenerBase mListener;
+    private boolean newProxyConfig;
+    private static DialtactsActivity instance;
+
+    public static final boolean isInstanciated() {
+        return instance != null;
+    }
+
+    public static final DialtactsActivity instance() {
+        if (instance != null)
+            return instance;
+        throw new RuntimeException("DialtactsActivity not instantiated yet");
+    }
+
+    //end
+
     protected class OptionsPopupMenu extends PopupMenu {
         public OptionsPopupMenu(Context context, View anchor) {
             super(context, anchor, Gravity.END);
@@ -382,6 +424,24 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
         // add by geniusgithub
 
+        //add by wzb
+        if (!LinphoneManager.isInstanciated()) {
+            finish();
+            startActivity(getIntent().setClass(this, LinphoneLauncherActivity.class));
+            return;
+        }
+
+        if(savedInstanceState == null){
+            if (LinphonePreferences.instance().getAccountCount() > 0) {
+                LinphonePreferences.instance().firstLaunchSuccessful();
+            } else {
+                startActivity(new Intent().setClass(this, AssistantActivity.class));
+                finish();
+                return;
+            }
+        }
+        //end
+
         mFirstLaunch = true;
 
         final Resources resources = getResources();
@@ -390,6 +450,9 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         Trace.beginSection(TAG + " setContentView");
         setContentView(R.layout.dialtacts_activity);
         Trace.endSection();
+        //add by wzb
+        instance = this;
+        //end
         getWindow().setBackgroundDrawable(null);
 
         Trace.beginSection(TAG + " setup Views");
@@ -499,12 +562,147 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         SmartDialPrefix.initializeNanpSettings(this);
         Trace.endSection();
         Trace.endSection();
+
+        //add by wzb
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            newProxyConfig = getIntent().getExtras().getBoolean("isNewProxyConfig");
+        }
+        mListener = new LinphoneCoreListenerBase(){
+            @Override
+            public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
+               // displayMissedChats(getUnreadMessageCount());
+            }
+
+            @Override
+            public void registrationState(LinphoneCore lc, LinphoneProxyConfig proxy, LinphoneCore.RegistrationState state, String smessage) {
+                if (state.equals(LinphoneCore.RegistrationState.RegistrationCleared)) {
+                    if (lc != null) {
+                        LinphoneAuthInfo authInfo = lc.findAuthInfo(proxy.getIdentity(), proxy.getRealm(), proxy.getDomain());
+                        if (authInfo != null)
+                            lc.removeAuthInfo(authInfo);
+                    }
+                }
+
+                //refreshAccounts();
+
+                if(getResources().getBoolean(R.bool.use_phone_number_validation)) {
+                    if (state.equals(LinphoneCore.RegistrationState.RegistrationOk)) {
+                        LinphoneManager.getInstance().isAccountWithAlias();
+                    }
+                }
+
+                if(state.equals(LinphoneCore.RegistrationState.RegistrationFailed) && newProxyConfig) {
+                    newProxyConfig = false;
+                    if (proxy.getError() == Reason.BadCredentials) {
+                        //displayCustomToast(getString(R.string.error_bad_credentials), Toast.LENGTH_LONG);
+                        ToastUtil.showLongToast(DialtactsActivity.this,getString(R.string.error_bad_credentials));
+                    }
+                    if (proxy.getError() == Reason.Unauthorized) {
+                       // displayCustomToast(getString(R.string.error_unauthorized), Toast.LENGTH_LONG);
+                        ToastUtil.showLongToast(DialtactsActivity.this,getString(R.string.error_unauthorized));
+                    }
+                    if (proxy.getError() == Reason.IOError) {
+                       // displayCustomToast(getString(R.string.error_io_error), Toast.LENGTH_LONG);
+                        ToastUtil.showLongToast(DialtactsActivity.this,getString(R.string.error_io_error));
+                    }
+                }
+            }
+
+            @Override
+            public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
+                android.util.Log.e("wzb","dialtactsActivity state:"+state.value());
+                if (state == State.IncomingReceived) {
+
+                    startActivity(new Intent(DialtactsActivity.instance(), CallIncomingActivity.class));
+                    //sendBroadcast(new Intent(CommonAction.CUSTOM_ACTION_GOTO_CALLINCOMING));
+                } else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
+
+                    startActivity(new Intent(DialtactsActivity.instance(), CallOutgoingActivity.class));
+                    //sendBroadcast(new Intent(CommonAction.CUSTOM_ACTION_GOTO_CALLOUTGOING));
+                } else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
+                    resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
+                   // sendBroadcast(new Intent(CommonAction.CUSTOM_ACTION_GOTO_GoBackToCallIfStillRunning));
+                }
+
+                int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
+                //displayMissedCalls(missedCalls);
+            }
+        };
+
+
+        //end
     }
+
+    //add by wzb
+    private static final int CALL_ACTIVITY = 19;
+    public void resetClassicMenuLayoutAndGoBackToCallIfStillRunning() {
+       // DialerFragment dialerFragment = DialerFragment.instance();
+       // if (dialerFragment != null) {
+        //    ((DialerFragment) dialerFragment).resetLayout(true);
+       // }
+
+        if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
+            LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
+            if (call.getState() == LinphoneCall.State.IncomingReceived) {
+                android.util.Log.e("wzb","111111111111");
+                startActivity(new Intent(DialtactsActivity.this, CallIncomingActivity.class));
+
+            } else {
+                startIncallActivity(call);
+            }
+        }
+    }
+
+    public void startIncallActivity(LinphoneCall currentCall) {
+
+        Intent intent = new Intent(this, CallActivity.class);
+
+        startActivityForResult(intent, CALL_ACTIVITY);
+
+    }
+
+
+    //end
 
     @Override
     protected void onResume() {
         Trace.beginSection(TAG + " onResume");
         super.onResume();
+
+        //add by wzb
+        if (!LinphoneService.isReady()) {
+            startService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
+        }
+
+        LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (lc != null) {
+            lc.addListener(mListener);
+        }
+
+        if(LinphonePreferences.instance().isFriendlistsubscriptionEnabled() && LinphoneManager.getLc().getDefaultProxyConfig() != null){
+            LinphoneManager.getInstance().subscribeFriendList(true);
+        } else {
+            LinphoneManager.getInstance().subscribeFriendList(false);
+        }
+        LinphoneManager.getInstance().changeStatusToOnline();
+        if (getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY ) {
+            if (LinphoneManager.getLc().getCalls().length > 0) {
+                LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
+                LinphoneCall.State callState = call.getState();
+
+                if (callState == State.IncomingReceived) {
+                    startActivity(new Intent(this, CallIncomingActivity.class));
+
+                } else if (callState == State.OutgoingInit || callState == State.OutgoingProgress || callState == State.OutgoingRinging) {
+                    startActivity(new Intent(this, CallOutgoingActivity.class));
+
+                } else {
+                    startIncallActivity(call);
+
+                }
+            }
+        }
+        //end
 
         mStateSaved = false;
         if (mFirstLaunch) {
@@ -585,7 +783,22 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             commitDialpadFragmentHide();
         }
         StatisticsUtil.onPause(this);
+        Wlog.e(" DialtactsActivity onpause");
+        //add by wzb
+        getIntent().putExtra("PreviousActivity", 0);
+        LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (lc != null) {
+            lc.removeListener(mListener);
+        }
+        //end
         super.onPause();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Wlog.e(" DialtactsActivity onDestroy");
     }
 
     @Override
@@ -633,6 +846,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     public void onClick(View view) {
         int resId = view.getId();
         if (resId == R.id.floating_action_button) {
+
             if (mListsFragment.getCurrentTabIndex()
                     == ListsFragment.TAB_INDEX_ALL_CONTACTS && !mInRegularSearch) {
                 DialerUtils.startActivityWithErrorToast(
@@ -719,6 +933,19 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                 Log.e(TAG, "Voice search failed");
             }
         }
+        //add by wzb
+        if(requestCode == CALL_ACTIVITY && resultCode == Activity.RESULT_FIRST_USER){
+            getIntent().putExtra("PreviousActivity", CALL_ACTIVITY);
+            if (LinphoneManager.getLc().getCallsNb() > 0) {
+                android.util.Log.e("wzb","aaaaa");
+            } else {
+                android.util.Log.e("wzb","bbb");
+                resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
+            }
+        }
+
+        //end
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 

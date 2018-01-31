@@ -527,10 +527,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			} catch (LinphoneCoreException e) {
 				return;
 			}
-		} else if (LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
+		//} else if (LinphoneActivity.isInstanciated()) {//del by wzb
+			//LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
 		} else {
 			Log.e("Error: " + getString(R.string.error_network_unreachable));
+			LinphoneApplication.CONTEXT.sendBroadcast(new Intent("com.custom.lp.NetWork_err"));//add by wzb
 		}
 	}
 
@@ -1049,9 +1050,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public Context getContext() {
 		try {
-			if (LinphoneActivity.isInstanciated())
-				return LinphoneActivity.instance();
-			else if (CallActivity.isInstanciated())
+			//if (LinphoneActivity.isInstanciated())
+				//return LinphoneActivity.instance();
+			//else if (CallActivity.isInstanciated()) //del by wzb
+			if (CallActivity.isInstanciated())
 				return CallActivity.instance();
 			else if (CallIncomingActivity.isInstanciated())
 				return CallIncomingActivity.instance();
@@ -1462,6 +1464,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	}
 
 	private void askLinkWithPhoneNumber(){
+		//add by wzb
+		if(true)return;
+		//end
 		long now = new Timestamp(new Date().getTime()).getTime();
 		long future = new Timestamp(LinphoneActivity.instance().getResources().getInteger(R.integer.popup_time_interval)).getTime();
 		long newDate = now + future;

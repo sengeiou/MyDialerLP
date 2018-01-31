@@ -26,6 +26,7 @@ import org.linphone.mediastream.Version;
 import org.linphone.tutorials.TutorialLauncherActivity;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
@@ -84,16 +85,30 @@ public class LinphoneLauncherActivity extends Activity {
 		}
 	}
 
+	private void gotoDialtactsActivity(){
+		Intent intent = new Intent();
+		ComponentName comp = new ComponentName("com.android.dialer","com.android.dialer.DialtactsActivity");
+		intent.setComponent(comp);
+		intent.setAction("android.intent.action.MAIN");
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+
+	}
+
 	private void callOutgoing(String number) {
 		try {
 			if (!LinphoneManager.getInstance().acceptCallIfIncomingPending()) {
-				String to = String.format("sip:%s@%s", number, "120.78.138.150");
+				//String to = String.format("sip:%s@%s", number, "120.78.138.150");
 
-				LinphoneManager.getInstance().newOutgoingCall(to, "Test Sip");
+				LinphoneManager.getInstance().newOutgoingCall(number, "Test Sip");
 
-				//startActivity(new Intent()
-				//		.setClass(this, LinphoneActivity.class)
-				//		.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+				if(true){
+					gotoDialtactsActivity();
+				}else {
+					startActivity(new Intent()
+							.setClass(LinphoneLauncherActivity.this, LinphoneActivity.class)
+							.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+				}
 				finish();
 			}
 		} catch (LinphoneCoreException e) {
@@ -108,12 +123,7 @@ public class LinphoneLauncherActivity extends Activity {
 	}
 
 	protected void onServiceReady() {
-		//add by wzb test
-		if(true) {
-			//finish();
-			//return;
-		}
-		//end
+
 		final Class<? extends Activity> classToStart;
 		if (getResources().getBoolean(R.bool.show_tutorials_instead_of_app)) {
 			classToStart = TutorialLauncherActivity.class;
@@ -132,7 +142,13 @@ public class LinphoneLauncherActivity extends Activity {
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				startActivity(new Intent().setClass(LinphoneLauncherActivity.this, classToStart).setData(getIntent().getData()));
+
+				if(true){
+					gotoDialtactsActivity();
+				}else {
+					startActivity(new Intent().setClass(LinphoneLauncherActivity.this, classToStart).setData(getIntent().getData()));
+				}
+
 				finish();
 			}
 		}, 0);

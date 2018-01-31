@@ -7,6 +7,7 @@ import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -67,9 +68,13 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
 		setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				//modify by wzb
+				//Context context = LinphoneService.instance();
+				//Intent intent = new Intent(context, LinphoneActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				//context.startActivity(intent);
 				Context context = LinphoneService.instance();
-				Intent intent = new Intent(context, LinphoneActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				context.startActivity(intent);
+				gotoDialtactsActivity(context);
+				//end
 			}
 		});
 		setOnLongClickListener(new OnLongClickListener() {
@@ -79,6 +84,16 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
 				return true;
 			}
 		});
+	}
+
+	private void gotoDialtactsActivity(Context context){
+		Intent intent = new Intent();
+		ComponentName comp = new ComponentName("com.android.dialer","com.android.dialer.DialtactsActivity");
+		intent.setComponent(comp);
+		intent.setAction("android.intent.action.MAIN");
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		context.startActivity(intent);
+
 	}
 
 	public LinphoneOverlay(Context context, AttributeSet attrs) {
