@@ -90,6 +90,7 @@ import com.android.dialer.util.TelecomUtil;
 import com.android.dialer.voicemail.VoicemailArchiveActivity;
 import com.android.dialer.widget.ActionBarController;
 import com.android.dialer.widget.SearchEditTextLayout;
+import com.android.dialer.wzb.DialerLauncherActivity;
 import com.android.dialerbind.DatabaseHelperManager;
 import com.android.dialerbind.ObjectFactory;
 import com.android.phone.common.animation.AnimUtils;
@@ -418,7 +419,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     protected void onCreate(Bundle savedInstanceState) {
         Trace.beginSection(TAG + " onCreate");
         super.onCreate(savedInstanceState);
-
+        Wlog.e("DialtactsActivity onCreate");
         // add by geniusgithub
         boolean hasStartPermissionActivity = ForceRequestPermissionsActivity.startPermissionActivity(this);
 
@@ -427,7 +428,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         //add by wzb
         if (!LinphoneManager.isInstanciated()) {
             finish();
-            startActivity(getIntent().setClass(this, LinphoneLauncherActivity.class));
+            startActivity(getIntent().setClass(this, DialerLauncherActivity.class));
             return;
         }
 
@@ -668,7 +669,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     protected void onResume() {
         Trace.beginSection(TAG + " onResume");
         super.onResume();
-
+        Wlog.e("DialtactsActivity onResume");
         //add by wzb
         if (!LinphoneService.isReady()) {
             startService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));

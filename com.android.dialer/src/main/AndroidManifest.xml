@@ -83,6 +83,19 @@
         </meta-data>
 
 
+        <activity android:name=".wzb.DialerLauncherActivity"
+            android:label="@string/launcherActivityLabel"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:exported="true"
+            android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+
         <!-- The entrance point for Phone UI.
              stateAlwaysHidden is set to suppress keyboard show up on
              dialpad screen. -->
@@ -112,12 +125,14 @@
                 <action android:name="android.intent.action.DIAL" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
+            <!-- del by wzb
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
+            </intent-filter> -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.DIAL" />
@@ -152,6 +167,33 @@
                 android:name="com.android.keyguard.layout"
                 android:resource="@layout/keyguard_preview" />
         </activity>
+
+        <!-- add by wzb -->
+        <activity android:name=".wzb.CallInterfaceActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:exported="true"
+            android:theme="@style/NoTitle">
+
+            <intent-filter>
+                <action android:name="android.intent.action.CALL" />
+                <action android:name="android.intent.action.CALL_PRIVILEGED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                 <data android:scheme="tel" />
+                <data android:scheme="sip" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="sip" />
+                <data android:scheme="imto" />
+            </intent-filter>
+
+
+
+        </activity>
+
+
 
         <!--add by geniusgithub -->
         <activity android:name=".ForceRequestPermissionsActivity"
