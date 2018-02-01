@@ -82,8 +82,11 @@ public final class PhoneNumberFormatter {
      */
     public static final void setPhoneNumberFormattingTextWatcher(
             Context context, TextView textView, boolean formatAfterWatcherSet) {
+//zx delete
+/*
         new TextWatcherLoadAsyncTask(GeoUtil.getCurrentCountryIso(context),
                 textView, formatAfterWatcherSet)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void[]) null);
+*/                
     }
 }

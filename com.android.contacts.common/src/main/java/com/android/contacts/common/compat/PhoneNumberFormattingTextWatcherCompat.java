@@ -19,9 +19,11 @@ import android.telephony.PhoneNumberFormattingTextWatcher;
 
 public class PhoneNumberFormattingTextWatcherCompat {
     public static PhoneNumberFormattingTextWatcher newInstance(String countryCode) {
+	/*	zx delete
         if (CompatUtils.isLollipopCompatible()) {
             return new PhoneNumberFormattingTextWatcher(countryCode);
         }
+   	*/     
         return new PhoneNumberFormattingTextWatcher();
     }
 }
