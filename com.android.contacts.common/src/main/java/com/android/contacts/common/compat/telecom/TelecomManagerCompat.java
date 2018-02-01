@@ -52,7 +52,7 @@ public class TelecomManagerCompat {
             return;
         }
        // if (CompatUtils.isMarshmallowCompatible()) {
-        if(fasle){ //modify by wzb for android6.0 
+        if(false){ //modify by wzb for android6.0
             telecomManager.placeCall(intent.getData(), intent.getExtras());
             return;
         }
