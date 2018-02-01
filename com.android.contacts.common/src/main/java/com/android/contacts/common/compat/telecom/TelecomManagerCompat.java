@@ -51,7 +51,8 @@ public class TelecomManagerCompat {
         if (activity == null || telecomManager == null || intent == null) {
             return;
         }
-        if (CompatUtils.isMarshmallowCompatible()) {
+       // if (CompatUtils.isMarshmallowCompatible()) {
+        if(fasle){ //modify by wzb for android6.0 
             telecomManager.placeCall(intent.getData(), intent.getExtras());
             return;
         }
