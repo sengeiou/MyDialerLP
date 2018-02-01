@@ -105,6 +105,7 @@ import org.linphone.LinphoneLauncherActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
+import org.linphone.LinphoneUtils;
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
@@ -114,6 +115,7 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.Reason;
+import org.linphone.purchase.InAppPurchaseActivity;
 import org.linphone.wzb.CommonAction;
 import org.linphone.wzb.Wlog;
 //add by wzb
@@ -122,6 +124,7 @@ import org.linphone.wzb.util.ToastUtil;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -276,6 +279,9 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     private LinphoneCoreListenerBase mListener;
     private boolean newProxyConfig;
     private static DialtactsActivity instance;
+    private boolean doNotGoToCallActivity = false;
+
+
 
     public static final boolean isInstanciated() {
         return instance != null;
@@ -1201,14 +1207,74 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         }
     }
 
+    //add by wzb 20180201
+    public void displayInapp() {
+        startActivity(new Intent(DialtactsActivity.this, InAppPurchaseActivity.class));
+
+    }
+
+    //end
+
+
     @Override
     public void onNewIntent(Intent newIntent) {
+        Wlog.e("DialtactsActivity onNewIntent");
         setIntent(newIntent);
 
         mStateSaved = false;
         displayFragment(newIntent);
 
         invalidateOptionsMenu();
+
+        //add by wzb 20180201
+        Bundle extras = newIntent.getExtras();
+        if (extras != null && extras.getBoolean("GoToChat", false)) {
+            LinphoneService.instance().removeMessageNotification();
+            String sipUri = extras.getString("ChatContactSipUri");
+            doNotGoToCallActivity = true;
+            //displayChat(sipUri);
+        } else if (extras != null && extras.getBoolean("GoToHistory", false)) {
+            Wlog.e("DialtactsActivity onNewIntent GoToHistory");
+            doNotGoToCallActivity = true;
+            //changeCurrentFragment(FragmentsAvailable.HISTORY_LIST, null);
+        } else if (extras != null && extras.getBoolean("GoToInapp", false)) {
+            LinphoneService.instance().removeMessageNotification();
+            doNotGoToCallActivity = true;
+            displayInapp();
+        } else if (extras != null && extras.getBoolean("Notification", false)) {
+            if (LinphoneManager.getLc().getCallsNb() > 0) {
+                LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
+                startIncallActivity(call);
+            }
+        } else {
+            /*DialerFragment dialerFragment = DialerFragment.instance();
+            if (dialerFragment != null) {
+                if (extras != null && extras.containsKey("SipUriOrNumber")) {
+                    if (getResources().getBoolean(R.bool.automatically_start_intercepted_outgoing_gsm_call)) {
+                        ((DialerFragment) dialerFragment).newOutgoingCall(extras.getString("SipUriOrNumber"));
+                    } else {
+                        ((DialerFragment) dialerFragment).displayTextInAddressBar(extras.getString("SipUriOrNumber"));
+                    }
+                } else {
+                    ((DialerFragment) dialerFragment).newOutgoingCall(intent);
+                }
+            }*/
+            if (LinphoneManager.getLc().getCalls().length > 0) {
+                // If a call is ringing, start incomingcallactivity
+                Collection<State> incoming = new ArrayList<LinphoneCall.State>();
+                incoming.add(LinphoneCall.State.IncomingReceived);
+                if (LinphoneUtils.getCallsInState(LinphoneManager.getLc(), incoming).size() > 0) {
+                    if (CallActivity.isInstanciated()) {
+                        CallActivity.instance().startIncomingCallActivity();
+                    } else {
+                        startActivity(new Intent(this, CallIncomingActivity.class));
+
+                    }
+                }
+            }
+        }
+
+        //end
     }
 
     /** Returns true if the given intent contains a phone number to populate the dialer with */
@@ -1368,6 +1434,12 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             exitSearchUi();
             DialerUtils.hideInputMethod(mParentLayout);
         } else {
+            //add by wzb
+            if(true){//move to back
+                moveTaskToBack(true);
+                return;
+            }
+            //end
             super.onBackPressed();
         }
     }
