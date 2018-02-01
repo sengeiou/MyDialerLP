@@ -78,6 +78,7 @@ import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.tools.OpenH264DownloadHelper;
+import org.linphone.wzb.Wlog;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -168,6 +169,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		echoTesterIsRunning = false;
 		mServiceContext = c;
 		basePath = c.getFilesDir().getAbsolutePath();
+
 		mLPConfigXsd = basePath + "/lpconfig.xsd";
 		mLinphoneFactoryConfigFile = basePath + "/linphonerc";
 		mLinphoneConfigFile = basePath + "/.linphonerc";
@@ -486,6 +488,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		// If to is only a username, try to find the contact to get an alias if existing
 		if (!to.startsWith("sip:") || !to.contains("@")) {
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromPhoneNumber(to);
+			Wlog.e("newOutgoingCall contact="+contact);
 			if (contact != null) {
 				String alias = contact.getPresenceModelForUri(to);
 				if (alias != null) {

@@ -144,7 +144,7 @@ private static AssistantActivity instance;
 			public void configuringStatus(LinphoneCore lc, final LinphoneCore.RemoteProvisioningState state, String message) {
 				if (progress != null) progress.dismiss();
 				if (state == LinphoneCore.RemoteProvisioningState.ConfiguringSuccessful) {
-					goToLinphoneActivity();
+					//goToLinphoneActivity(); //del by wzb for test
 				} else if (state == LinphoneCore.RemoteProvisioningState.ConfiguringFailed) {
 					Toast.makeText(AssistantActivity.instance(), getString(R.string.remote_provisioning_failure), Toast.LENGTH_LONG).show();
 				}
@@ -261,7 +261,7 @@ private static AssistantActivity instance;
 				moveTaskToBack(true);
 			} else {
 				LinphonePreferences.instance().firstLaunchSuccessful();
-				startActivity(new Intent().setClass(this, LinphoneActivity.class));
+				//startActivity(new Intent().setClass(this, LinphoneActivity.class)); //del by wzb
 				finish();
 			}
 		} else if (currentFragment == AssistantFragmentsEnum.LOGIN
@@ -655,7 +655,7 @@ private static AssistantActivity instance;
 
 	private void goToLinphoneActivity() {
 		mPrefs.firstLaunchSuccessful();
-		startActivity(new Intent().setClass(this, LinphoneActivity.class).putExtra("isNewProxyConfig", true));
+		//startActivity(new Intent().setClass(this, LinphoneActivity.class).putExtra("isNewProxyConfig", true)); //del by wzb for test
 		finish();
 	}
 
