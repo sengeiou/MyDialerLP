@@ -72,12 +72,14 @@ public class PhoneNumberUtilsCompat {
 
     public static String formatNumber(
             String phoneNumber, String phoneNumberE164, String defaultCountryIso) {
+     /*	zx delete       
         if (CompatUtils.isLollipopCompatible()) {
             return PhoneNumberUtils.formatNumber(phoneNumber, phoneNumberE164, defaultCountryIso);
         } else {
             // This method was deprecated in API level 21, so it's only used on pre-L SDKs.
+	*/
             return PhoneNumberUtils.formatNumber(phoneNumber);
-        }
+        //}
     }
 
     public static CharSequence createTtsSpannable(CharSequence phoneNumber) {
