@@ -100,6 +100,7 @@ import com.google.common.annotations.VisibleForTesting;
 import org.linphone.CallActivity;
 import org.linphone.CallIncomingActivity;
 import org.linphone.CallOutgoingActivity;
+import org.linphone.ContactsManager;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneLauncherActivity;
 import org.linphone.LinphoneManager;
@@ -441,6 +442,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         if(savedInstanceState == null){
             if (LinphonePreferences.instance().getAccountCount() > 0) {
                 LinphonePreferences.instance().firstLaunchSuccessful();
+
             } else {
                 startActivity(new Intent().setClass(this, AssistantActivity.class));
                 finish();
@@ -574,6 +576,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         if (getIntent() != null && getIntent().getExtras() != null) {
             newProxyConfig = getIntent().getExtras().getBoolean("isNewProxyConfig");
         }
+
         mListener = new LinphoneCoreListenerBase(){
             @Override
             public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
@@ -590,7 +593,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                     }
                 }
 
-                //refreshAccounts();
+                refreshAccounts();
 
                 if(getResources().getBoolean(R.bool.use_phone_number_validation)) {
                     if (state.equals(LinphoneCore.RegistrationState.RegistrationOk)) {
@@ -639,6 +642,22 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
         //end
     }
+
+    //add by wzb
+    public void refreshAccounts(){
+        int accountNum=LinphoneManager.getLc().getProxyConfigList().length;
+        Wlog.e("accountNum="+accountNum);
+        for(LinphoneProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()){
+            //if(proxyConfig != LinphoneManager.getLc().getDefaultProxyConfig()){
+                Wlog.e("account:"+proxyConfig.getAddress().asStringUriOnly());
+                Wlog.e("account state:"+proxyConfig.getState());
+            //}
+        }
+        String defaultAccount=LinphoneManager.getLc().getDefaultProxyConfig().getAddress().asStringUriOnly();
+        Wlog.e("defaultAccount="+defaultAccount);
+
+    }
+    //end
 
     //add by wzb
     private static final int CALL_ACTIVITY = 19;
@@ -708,6 +727,14 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
                 }
             }
+        }
+
+        if (getResources().getBoolean(org.linphone.R.bool.use_linphone_tag)) {
+
+            ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
+
+        } else {
+            ContactsManager.getInstance().initializeContactManager(getApplicationContext(), getContentResolver());
         }
         //end
 
