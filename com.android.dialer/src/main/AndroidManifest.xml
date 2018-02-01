@@ -430,5 +430,11 @@
                 <action android:name="com.custom.lp.IncomingReceived"/>
             </intent-filter>
         </receiver>
+
+        <!-- add by wzb 20180201 -->
+        <service
+            android:name=".wzb.RegisterListenService"
+            android:exported="true" />
+
     </application>
 </manifest>

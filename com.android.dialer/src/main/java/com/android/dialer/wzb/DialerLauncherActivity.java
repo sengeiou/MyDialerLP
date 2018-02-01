@@ -86,6 +86,8 @@ public class DialerLauncherActivity extends Activity {
             @Override
             public void run() {
 
+                startService(new Intent().setClass(DialerLauncherActivity.this,RegisterListenService.class));
+
                 startActivity(new Intent().setClass(DialerLauncherActivity.this, classToStart).setData(getIntent().getData()));
 
                 finish();
