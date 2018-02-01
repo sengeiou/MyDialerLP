@@ -310,11 +310,21 @@ public final class LinphoneService extends Service {
 		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		mNM.cancel(INCALL_NOTIF_ID); // in case of crash the icon is not removed
 
-		Intent notifIntent = new Intent(this, incomingReceivedActivity);
+		//modify by wzb
+		//Intent notifIntent = new Intent(this, incomingReceivedActivity);
+		Intent notifIntent=new Intent();
+		notifIntent.setAction("com.custom.lp.default_main");
+		//end
+
 		notifIntent.putExtra("Notification", true);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		
-		Intent missedCallNotifIntent = new Intent(this, incomingReceivedActivity);
+
+
+		//modify by wzb
+		//Intent missedCallNotifIntent = new Intent(this, incomingReceivedActivity);
+		Intent missedCallNotifIntent=new Intent();
+		missedCallNotifIntent.setAction("com.custom.lp.default_main");
+		//end
 		missedCallNotifIntent.putExtra("GoToHistory", true);
 		mMissedCallsNotifContentIntent = PendingIntent.getActivity(this, 0, missedCallNotifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -573,7 +583,11 @@ public final class LinphoneService extends Service {
 	}
 	
 	public void displayMessageNotification(String fromSipUri, String fromName, String message) {
-		Intent notifIntent = new Intent(this, LinphoneActivity.class);
+		//modify by wzb
+		//Intent notifIntent = new Intent(this, LinphoneActivity.class);
+		Intent notifIntent=new Intent();
+		notifIntent.setAction("com.custom.lp.default_main");
+		//end
 		notifIntent.putExtra("GoToChat", true);
 		notifIntent.putExtra("ChatContactSipUri", fromSipUri);
 		
@@ -614,7 +628,11 @@ public final class LinphoneService extends Service {
 	}
 
 	public void displayInappNotification(String message) {
-		Intent notifIntent = new Intent(this, LinphoneActivity.class);
+		//modify by wzb
+		//Intent notifIntent = new Intent(this, LinphoneActivity.class);
+		Intent notifIntent=new Intent();
+		notifIntent.setAction("com.custom.lp.default_main");
+		//end
 		notifIntent.putExtra("GoToInapp", true);
 
 		PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -821,7 +839,11 @@ public final class LinphoneService extends Service {
 	}
 	
 	private void resetIntentLaunchedOnNotificationClick() {
-		Intent notifIntent = new Intent(this, incomingReceivedActivity);
+		//modify by wzb
+		//Intent notifIntent = new Intent(this, incomingReceivedActivity);
+		Intent notifIntent=new Intent();
+		notifIntent.setAction("com.custom.lp.default_main");
+		//end
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		/*if (mNotif != null) {

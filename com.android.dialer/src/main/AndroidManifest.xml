@@ -126,6 +126,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
+            <intent-filter>
+                <action android:name="com.custom.lp.default_main" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
             <!-- del by wzb
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
