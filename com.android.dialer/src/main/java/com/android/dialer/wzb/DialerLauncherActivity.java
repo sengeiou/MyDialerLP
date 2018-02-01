@@ -90,7 +90,7 @@ public class DialerLauncherActivity extends Activity {
 
                 finish();
             }
-        }, 1000);
+        }, 0);
     }
 
     private class ServiceWaitThread extends Thread {
