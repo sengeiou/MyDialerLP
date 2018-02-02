@@ -43,9 +43,9 @@ public class CallInterfaceActivity extends Activity {
     private void callOutgoing(String number) {
         try {
             if (!LinphoneManager.getInstance().acceptCallIfIncomingPending()) {
-                //String to = String.format("sip:%s@%s", number, "120.78.138.150");
+                String to = String.format("sip:%s@%s", number, "192.168.0.191");
 
-                LinphoneManager.getInstance().newOutgoingCall(number, "Test Sip");
+                LinphoneManager.getInstance().newOutgoingCall(number, null);
 
                 startActivity(new Intent()
                         .setClass(CallInterfaceActivity.this, DialtactsActivity.class)
