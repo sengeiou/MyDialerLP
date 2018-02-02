@@ -242,20 +242,31 @@ public class StatusFragment extends Fragment {
 
 		try {
 			if (state == RegistrationState.RegistrationOk && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getDefaultProxyConfig().isRegistered()) {
-				return context.getString(R.string.status_connected);
+				return context.getString(R.string.status_connected)+getDefaultAcc();
 			} else if (state == RegistrationState.RegistrationProgress) {
-				return context.getString(R.string.status_in_progress);
+				return context.getString(R.string.status_in_progress)+getDefaultAcc();
 			} else if (state == RegistrationState.RegistrationFailed) {
-				return context.getString(R.string.status_error);
+				return context.getString(R.string.status_error)+getDefaultAcc();
 			} else {
-				return context.getString(R.string.status_not_connected);
+				return context.getString(R.string.status_not_connected)+getDefaultAcc();
 			}
 		} catch (Exception e) {
 			Log.e(e);
 		}
 
-		return context.getString(R.string.status_not_connected);
+		return context.getString(R.string.status_not_connected)+getDefaultAcc();
 	}
+
+	//add by wzb for show default sip account 20180202
+	private String getDefaultAcc(){
+		String defaultAcc="";
+		if(LinphoneManager.getLc().getDefaultProxyConfig() != null){
+			defaultAcc=LinphoneManager.getLc().getDefaultProxyConfig().getAddress().asStringUriOnly();
+		}
+		return "(默认帐号 "+defaultAcc+")";
+	}
+
+	//end
 
 	//INCALL STATUS BAR
 	private void startCallQuality() {
