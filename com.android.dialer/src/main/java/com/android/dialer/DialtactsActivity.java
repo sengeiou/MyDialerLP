@@ -456,6 +456,16 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         final Resources resources = getResources();
         mActionBarHeight = resources.getDimensionPixelSize(R.dimen.action_bar_height_large);
 
+        //add by wzb 20180202
+        if (getResources().getBoolean(org.linphone.R.bool.use_linphone_tag)) {
+
+            ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
+
+        } else {
+            ContactsManager.getInstance().initializeContactManager(getApplicationContext(), getContentResolver());
+        }
+        //end
+
         Trace.beginSection(TAG + " setContentView");
         setContentView(R.layout.dialtacts_activity);
         Trace.endSection();
@@ -690,6 +700,22 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
     //end
 
+    //add by wzb 20180202
+    private boolean fetchedContactsOnce = false;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Wlog.e("DialtactsActivity onStart");
+        if (!fetchedContactsOnce) {
+            ContactsManager.getInstance().enableContactsAccess();
+            ContactsManager.getInstance().fetchContactsAsync();
+            fetchedContactsOnce = true;
+        }
+    }
+
+    //end
+
     @Override
     protected void onResume() {
         Trace.beginSection(TAG + " onResume");
@@ -729,13 +755,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             }
         }
 
-        if (getResources().getBoolean(org.linphone.R.bool.use_linphone_tag)) {
 
-            ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
-
-        } else {
-            ContactsManager.getInstance().initializeContactManager(getApplicationContext(), getContentResolver());
-        }
         //end
 
         mStateSaved = false;
@@ -843,9 +863,23 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         outState.putBoolean(KEY_IN_DIALPAD_SEARCH_UI, mInDialpadSearch);
         outState.putBoolean(KEY_FIRST_LAUNCH, mFirstLaunch);
         outState.putBoolean(KEY_IS_DIALPAD_SHOWN, mIsDialpadShown);
+        //add by wzb 20180202
+        outState.putBoolean("fetchedContactsOnce", fetchedContactsOnce);
+        //end
         mActionBarController.saveInstanceState(outState);
         mStateSaved = true;
     }
+
+    //add by wzb 20180202
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        fetchedContactsOnce = savedInstanceState.getBoolean("fetchedContactsOnce");
+    }
+
+
+    //end
 
     @Override
     public void onAttachFragment(Fragment fragment) {
