@@ -95,6 +95,16 @@
 
         </activity>
 
+        <activity android:name=".wzb.AccountRegistActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:exported="true"
+            android:theme="@style/NoTitle">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+        </intent-filter>
+
+    </activity>
+
 
         <!-- The entrance point for Phone UI.
              stateAlwaysHidden is set to suppress keyboard show up on
