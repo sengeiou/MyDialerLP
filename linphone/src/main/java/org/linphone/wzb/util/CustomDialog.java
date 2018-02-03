@@ -118,6 +118,13 @@ public class CustomDialog {
 		showNoSizeDefaultDialog(context, view, true);
 	}
 
+	public static void showWaitDialog(Context context, String msg,boolean cancle) {
+		view = LayoutInflater.from(context).inflate(R.layout.dialog_wait, null);
+		TextView txt_dialog_msg = (TextView) view.findViewById(R.id.txt_dialog_msg);
+		txt_dialog_msg.setText(msg);
+		showNoSizeDefaultDialog(context, view, cancle);
+	}
+
 	/**
 	 * 显示等待对话框.
 	 *

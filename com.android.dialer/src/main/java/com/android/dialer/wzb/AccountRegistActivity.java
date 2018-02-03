@@ -107,8 +107,8 @@ public class AccountRegistActivity extends Activity implements LinphoneAccountCr
                 case 1002://exp
                     completed("EXP");
                     break;
-                case 1009://10s timeout
-                    completed("EXP");
+                case 1009://15s timeout
+                    completed("TIMEOUT");
                     break;
                 default:
                     break;
@@ -116,6 +116,12 @@ public class AccountRegistActivity extends Activity implements LinphoneAccountCr
             }
         }
     };
+
+    @Override
+    public void onBackPressed() {
+
+       // super.onBackPressed();
+    }
 
     private void completed(String result){
         CustomDialog.dismissDialog();
@@ -133,12 +139,8 @@ public class AccountRegistActivity extends Activity implements LinphoneAccountCr
             Wlog.e("AccountRegistActivity add listener");
             lc.addListener(mListener);
         }
-        //test
-       // startActivity(new Intent().setClass(AccountRegistActivity.this, AssistantActivity.class));
-        //finish();
-        //if(true)return;
-        //
-        CustomDialog.showWaitDialog(AccountRegistActivity.this,"正在注册到服务器...");
+
+        CustomDialog.showWaitDialog(AccountRegistActivity.this,"正在注册到服务器...",false);
         String username=getIntent().getStringExtra("username");
         String password=getIntent().getStringExtra("password");
         String domain=getIntent().getStringExtra("domain");
@@ -161,7 +163,7 @@ public class AccountRegistActivity extends Activity implements LinphoneAccountCr
             transport = TransportType.LinphoneTransportTcp;
         }
         genericLogIn(username,password,displayname,null,domain,transport);
-        mHandler.sendEmptyMessageDelayed(1009,10*1000);
+        mHandler.sendEmptyMessageDelayed(1009,15*1000);
 
     }
 

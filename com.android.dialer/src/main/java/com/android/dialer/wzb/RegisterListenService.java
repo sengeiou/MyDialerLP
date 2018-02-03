@@ -64,15 +64,15 @@ public class RegisterListenService extends Service{
             String allAccount = "sip;sip";
             for (LinphoneProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()) {
 
-               // Wlog.e("RegisterListenService account:" + proxyConfig.getAddress().asStringUriOnly());
-               // Wlog.e("RegisterListenService account state:" + proxyConfig.getState());
+                Wlog.e("RegisterListenService account:" + proxyConfig.getAddress().asStringUriOnly());
+                Wlog.e("RegisterListenService account state:" + proxyConfig.getState());
 
                 allAccount = allAccount + ";" + proxyConfig.getAddress().asStringUriOnly() + ";" + proxyConfig.getState();
 
             }
 
             String defaultAccount = LinphoneManager.getLc().getDefaultProxyConfig().getAddress().asStringUriOnly();
-            //Wlog.e("RegisterListenService defaultAccount=" + defaultAccount);
+            Wlog.e("RegisterListenService defaultAccount=" + defaultAccount);
 
             Intent allAccountIntent=new Intent("com.custom.lp.ALL_ACCOUNT");
             allAccountIntent.putExtra("all_account",allAccount);
