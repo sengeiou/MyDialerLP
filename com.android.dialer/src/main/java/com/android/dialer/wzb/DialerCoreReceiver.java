@@ -3,6 +3,7 @@ package com.android.dialer.wzb;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.android.dialer.DialtactsActivity;
 
@@ -11,6 +12,7 @@ import org.linphone.CallIncomingActivity;
 import org.linphone.CallOutgoingActivity;
 import org.linphone.LinphoneApplication;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.core.LinphoneCall;
 import org.linphone.wzb.CommonAction;
 import org.linphone.wzb.util.ToastUtil;
@@ -54,6 +56,20 @@ public class DialerCoreReceiver extends BroadcastReceiver{
             Intent mintent=new Intent(context,DialtactsActivity.class);
             mintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(mintent);
+        }
+        //delete account
+        else if(action.equals("com.custom.lp.DEL_ACCOUNT")){
+            String url=intent.getStringExtra("sipurl");
+            if(!TextUtils.isEmpty(url)){
+                LinphonePreferences.instance().deleteAccountBySipUrl(url);
+            }
+        }
+        //set default account
+        else if(action.equals("com.custom.lp.SET_DEFAULT")){
+            String defaultsip=intent.getStringExtra("defaultsip");
+            if(!TextUtils.isEmpty(defaultsip)){
+                LinphonePreferences.instance().setDefaultAccountBySipUrl(defaultsip);
+            }
         }
     }
 

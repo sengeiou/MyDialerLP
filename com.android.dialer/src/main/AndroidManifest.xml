@@ -438,6 +438,8 @@
                 <action android:name="com.custom.lp.NetWork_err"/>
 
                 <action android:name="com.custom.lp.IncomingReceived"/>
+                <action android:name="com.custom.lp.DEL_ACCOUNT"/>
+                <action android:name="com.custom.lp.SET_DEFAULT"/>
             </intent-filter>
         </receiver>
 

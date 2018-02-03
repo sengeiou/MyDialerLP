@@ -710,6 +710,22 @@ public class LinphonePreferences {
 
 	}
 
+	//add by wzb for set default account by sip url 20180203
+	public void setDefaultAccountBySipUrl(String url){
+        int accountNum=LinphoneManager.getLc().getProxyConfigList().length;
+        if(accountNum>0) {
+            int i=0;
+            for (LinphoneProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()) {
+                if(proxyConfig.getAddress().asStringUriOnly().equals(url)){
+                    setDefaultAccount(i);
+                    break;
+                }
+                i++;
+            }
+        }
+
+	}
+	//end
 	public void setDefaultAccount(int accountIndex) {
 		LinphoneProxyConfig[] prxCfgs = getLc().getProxyConfigList();
 		if (accountIndex >= 0 && accountIndex < prxCfgs.length)
@@ -776,6 +792,25 @@ public class LinphonePreferences {
 			getLc().setDefaultProxyConfig(getProxyConfig(0));
 		}
 	}
+
+	//add by wzb 20180203
+	public void deleteAccountBySipUrl(String url) {
+		int accountNum=LinphoneManager.getLc().getProxyConfigList().length;
+
+		if(accountNum>0) {
+			int i=0;
+			for (LinphoneProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()) {
+				if(proxyConfig.getAddress().asStringUriOnly().equals(url)){
+					deleteAccount(i);
+					break;
+				}
+				i++;
+			}
+		}
+
+	}
+	//end
+
 
 	public void deleteAccount(int n) {
 		LinphoneAuthInfo authInfo = getAuthInfo(n);
