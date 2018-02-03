@@ -80,12 +80,16 @@ public class AccountRegistActivity extends Activity implements LinphoneAccountCr
                            // CustomDialog.dismissDialog();
                           //  completed("FAIL");
                             mHandler.sendEmptyMessageDelayed(1001,2000);
-                        } else if(!(state == LinphoneCore.RegistrationState.RegistrationProgress)) {
+                            LinphonePreferences.instance().deleteAccountBySipUrl(address.asString());
+                        } else if(state == LinphoneCore.RegistrationState.RegistrationProgress) {
 
                             Wlog.e("AccountRegistActivity RegistrationProgress");
                            // CustomDialog.dismissDialog();
                           //  completed("EXP");
+                           // mHandler.sendEmptyMessageDelayed(1003,2000);
+                        }else{//exp
                             mHandler.sendEmptyMessageDelayed(1003,2000);
+                            LinphonePreferences.instance().deleteAccountBySipUrl(address.asString());
                         }
                     }
                 }
