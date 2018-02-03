@@ -107,10 +107,14 @@ public class AccountRegistActivity extends Activity implements LinphoneAccountCr
                 case 1002://exp
                     completed("EXP");
                     break;
+                case 1006:
+                    completed("EXSIT");
+                    break;
                 case 1009://15s timeout
                     completed("TIMEOUT");
                     break;
                 default:
+                    completed("EXP");
                     break;
 
             }
@@ -162,9 +166,30 @@ public class AccountRegistActivity extends Activity implements LinphoneAccountCr
         }else{
             transport = TransportType.LinphoneTransportTcp;
         }
-        genericLogIn(username,password,displayname,null,domain,transport);
-        mHandler.sendEmptyMessageDelayed(1009,15*1000);
+        //check sip url
+        String identity = "sip:" + username + "@" + domain;
+        if(checkSipAcc(identity)) {
+            genericLogIn(username, password, displayname, null, domain, transport);
+            mHandler.sendEmptyMessageDelayed(1009, 15 * 1000);
+        }else{
+            mHandler.sendEmptyMessageDelayed(1006, 2000);
+        }
 
+    }
+
+    private boolean checkSipAcc(String url){
+        int accountNum=LinphoneManager.getLc().getProxyConfigList().length;
+
+        if(accountNum>0) {
+            for (LinphoneProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()) {
+                if(proxyConfig.getAddress().asStringUriOnly().equals(url)){
+
+                    return false;
+                }
+
+            }
+        }
+        return true;
     }
 
     @Override
