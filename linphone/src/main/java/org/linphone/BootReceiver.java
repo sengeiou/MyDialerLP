@@ -21,6 +21,7 @@ package org.linphone;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LpConfig;
 import org.linphone.mediastream.Log;
+import org.linphone.wzb.Wlog;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -34,9 +35,11 @@ public class BootReceiver extends BroadcastReceiver {
 			Log.w("Device is shutting down, destroying LinphoneCore to unregister");
 			LinphoneManager.destroy();
 		} else {
+			Wlog.e("LinphoneService start");
 			String path = context.getFilesDir().getAbsolutePath() + "/.linphonerc";
 			LpConfig lpConfig = LinphoneCoreFactory.instance().createLpConfig(path);
-			if (lpConfig.getBool("app", "auto_start", false)) {
+			//if (lpConfig.getBool("app", "auto_start", false)) {
+			if(true){
 				Intent lLinphoneServiceIntent = new Intent(Intent.ACTION_MAIN);
 				lLinphoneServiceIntent.setClass(context, LinphoneService.class);
 				context.startService(lLinphoneServiceIntent);
