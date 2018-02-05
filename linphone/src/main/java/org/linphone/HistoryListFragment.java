@@ -75,7 +75,6 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 	private List<LinphoneCallLog> mLogs;
 
 	//add by wzb
-	FragmentManager fragmentManger;
 	View view;
 
 	@Override

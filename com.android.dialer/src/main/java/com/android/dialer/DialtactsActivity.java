@@ -316,6 +316,11 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
             menu.findItem(R.id.menu_history).setVisible(
                     PermissionsUtil.hasPhonePermissions(DialtactsActivity.this));
+
+            //add by wzb 20180205 hide history setting
+            menu.findItem(R.id.menu_history).setVisible(false);
+            menu.findItem(R.id.menu_call_settings).setVisible(false);
+            //end
             super.show();
         }
     }
