@@ -173,4 +173,12 @@
     <dimen name="call_type_icon_size">12dp</dimen>
 
     <dimen name="tab_unread_count_margin_left">0dp</dimen>
+<!-- sip account add-->
+	<dimen name="sip_bar_width">140dp</dimen>
+	<dimen name="sip_bar_height">220dp</dimen>
+	<dimen name="sip_btn_width">140dp</dimen>
+    <dimen name="sip_btn_height">50dp</dimen>
+	<dimen name="sip_divi_height">5dp</dimen>
+    <dimen name="sip_btn_paddingleft">15dp</dimen>
+    <dimen name="sip_btn_paddingright">30dp</dimen>
 </resources>

@@ -138,5 +138,6 @@
     <!-- Grey 700 -->
     <color name="call_detail_footer_text_color">#616161</color>
     <color name="call_detail_footer_icon_tint">@color/call_detail_footer_text_color</color>
-
+	<!-- sip widget add -->
+	<color name="colorGray">#4d4444</color>
 </resources>

@@ -34,16 +34,23 @@
         <FrameLayout
             android:layout_height="match_parent"
             android:layout_width="match_parent"
+            android:layout_marginRight="@dimen/sip_bar_width"
             android:id="@+id/dialtacts_frame"
             android:clipChildren="false" />
     </FrameLayout>
-
+    <include layout="@layout/sip_button"
+        android:id="@+id/sip_container"
+        android:layout_width="@dimen/sip_bar_width"
+        android:layout_height="@dimen/sip_bar_height"
+        android:layout_gravity="right|center"
+        android:clipChildren="false"/>
     <FrameLayout
         android:id="@+id/floating_action_button_container"
         android:background="@drawable/fab_blue"
         android:layout_width="@dimen/floating_action_button_width"
         android:layout_height="@dimen/floating_action_button_height"
         android:layout_marginBottom="@dimen/floating_action_button_margin_bottom"
+        android:layout_marginRight="@dimen/sip_bar_width"
         android:layout_gravity="center_horizontal|bottom"
         app:layout_behavior="com.android.dialer.FloatingActionButtonBehavior">
 

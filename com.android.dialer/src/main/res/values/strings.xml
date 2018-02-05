@@ -1067,4 +1067,14 @@
     <!--add by geniugithub -->
     <string name="required_permissions_promo">Contacts need to be "telephone", "address book", "storage space" and "location" access.</string>
 
+		<!--add by sip widget-->
+	<string name="sip_wigdet_lable">Sip控件</string>
+    <string name="sip1">SIP1</string>
+    <string name="sip2">SIP2</string>
+    <string name="sip3">SIP3</string>
+    <string name="sip4">SIP4</string>
+    <string name="sip1default">SIP1(默认)</string>
+    <string name="sip2default">SIP2(默认)</string>
+    <string name="sip3default">SIP3(默认)</string>
+    <string name="sip4default">SIP4(默认)</string>
 </resources>

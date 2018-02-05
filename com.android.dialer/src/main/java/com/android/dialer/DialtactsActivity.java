@@ -51,6 +51,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
@@ -657,19 +658,29 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
         //end
     }
+	    public void updateSipAccountbtn(String data,String defaultAccount) {
+            SipAccountState sas =new SipAccountState();
+            final View sipAccount = findViewById(
+                    R.id.sip_container);
+            sas.handleSipAccount(data,getApplicationContext(),sipAccount);
+            sas.handleSipDefaultAccount(defaultAccount,getApplicationContext(),sipAccount);
 
+    }
     //add by wzb
     public void refreshAccounts(){
         int accountNum=LinphoneManager.getLc().getProxyConfigList().length;
         Wlog.e("accountNum="+accountNum);
+        String allAccount = "sip;sip";
         for(LinphoneProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()){
             //if(proxyConfig != LinphoneManager.getLc().getDefaultProxyConfig()){
                 Wlog.e("account:"+proxyConfig.getAddress().asStringUriOnly());
                 Wlog.e("account state:"+proxyConfig.getState());
             //}
+            allAccount = allAccount + ";" + proxyConfig.getAddress().asStringUriOnly() + ";" + proxyConfig.getState();
         }
         String defaultAccount=LinphoneManager.getLc().getDefaultProxyConfig().getAddress().asStringUriOnly();
         Wlog.e("defaultAccount="+defaultAccount);
+        updateSipAccountbtn(allAccount,defaultAccount);
 
     }
     //end
