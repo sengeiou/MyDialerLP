@@ -1276,6 +1276,12 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
     //end
 
+    //add by wzb 20180205
+    public void gotoCall(String number,String name){
+        LinphoneManager.getInstance().newOutgoingCall(number,name);
+    }
+    //end
+
 
     @Override
     public void onNewIntent(Intent newIntent) {

@@ -47,6 +47,8 @@ import com.android.dialer.voicemail.VoicemailStatusHelper;
 import com.android.dialer.voicemail.VoicemailStatusHelperImpl;
 import com.android.dialer.widget.ActionBarController;
 
+import org.linphone.HistoryListFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +86,8 @@ public class ListsFragment extends Fragment
     private View mRemoveViewContent;
 
     private SpeedDialFragment mSpeedDialFragment;
-    private CallLogFragment mHistoryFragment;
+    //private CallLogFragment mHistoryFragment;
+    private HistoryListFragment mHistoryFragment;//wzb test
     private AllContactsFragment mAllContactsFragment;
     private CallLogFragment mVoicemailFragment;
 
@@ -128,7 +131,7 @@ public class ListsFragment extends Fragment
                     mSpeedDialFragment = new SpeedDialFragment();
                     return mSpeedDialFragment;
                 case TAB_INDEX_HISTORY:
-                    mHistoryFragment = new CallLogFragment(CallLogQueryHandler.CALL_TYPE_ALL);
+                    mHistoryFragment = new HistoryListFragment();//wzb test//new CallLogFragment(CallLogQueryHandler.CALL_TYPE_ALL);
                     return mHistoryFragment;
                 case TAB_INDEX_ALL_CONTACTS:
                     mAllContactsFragment = new AllContactsFragment();
@@ -150,7 +153,7 @@ public class ListsFragment extends Fragment
             if (fragment instanceof SpeedDialFragment) {
                 mSpeedDialFragment = (SpeedDialFragment) fragment;
             } else if (fragment instanceof CallLogFragment && position == TAB_INDEX_HISTORY) {
-                mHistoryFragment = (CallLogFragment) fragment;
+                mHistoryFragment = (HistoryListFragment)fragment;//wzb test//(CallLogFragment) fragment;
             } else if (fragment instanceof AllContactsFragment) {
                 mAllContactsFragment = (AllContactsFragment) fragment;
             } else if (fragment instanceof CallLogFragment && position == TAB_INDEX_VOICEMAIL) {

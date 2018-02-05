@@ -71,6 +71,11 @@ public class DialerCoreReceiver extends BroadcastReceiver{
                 LinphonePreferences.instance().setDefaultAccountBySipUrl(defaultsip);
             }
         }
+        else if(action.equals("com.custom.lp_GOTO_CALL")){
+            String number=intent.getStringExtra("number");
+            String displayname=intent.getStringExtra("name");
+            if(!TextUtils.isEmpty(number))DialtactsActivity.instance().gotoCall(number,displayname);
+        }
     }
 
 
