@@ -1,13 +1,14 @@
 package com.android.dialer;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+//import android.os.SystemProperties;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * Created by Administrator on 2018/2/3.
@@ -45,26 +46,49 @@ public class SipAccountState {
 
     public  void handleSipDefaultAccount(String data,Context context,View view)
     {
-        Button sip1AccountBtn =(Button)view.findViewById(R.id.sip1);
-        Button sip2AccountBtn =(Button)view.findViewById(R.id.sip2);
-        Button sip3AccountBtn =(Button)view.findViewById(R.id.sip3);
-        Button sip4AccountBtn =(Button)view.findViewById(R.id.sip4);
+        String str=data.substring(4);
+        TextView sip1Title =(TextView)view.findViewById(R.id.siptitle1);
+        TextView sip2Title =(TextView)view.findViewById(R.id.siptitle2);
+        TextView sip3Title =(TextView)view.findViewById(R.id.siptitle3);
+        TextView sip4Title =(TextView)view.findViewById(R.id.siptitle4);
+
+        TextView sip1name =(TextView)view.findViewById(R.id.sipname1);
+        TextView sip2name =(TextView)view.findViewById(R.id.sipname2);
+        TextView sip3name =(TextView)view.findViewById(R.id.sipname3);
+        TextView sip4name =(TextView)view.findViewById(R.id.sipname4);
+
         Log.e("sip","default data = "+data);
         if(isDefaultAccount(data,SIP1,context))
         {
-            sip1AccountBtn.setText(R.string.sip1default);
+            sip1Title.setText(R.string.sip1default);
+            sip2Title.setText(R.string.sip2);
+            sip3Title.setText(R.string.sip3);
+            sip4Title.setText(R.string.sip4);
+          //  sip1name.setText(str);
         }
         else if(isDefaultAccount(data,SIP2,context))
         {
-            sip2AccountBtn.setText(R.string.sip2default);
+            sip2Title.setText(R.string.sip2default);
+           // sip2name.setText(str);
+            sip1Title.setText(R.string.sip1);
+            sip3Title.setText(R.string.sip3);
+            sip4Title.setText(R.string.sip4);
         }
         else if(isDefaultAccount(data,SIP3,context))
         {
-            sip3AccountBtn.setText(R.string.sip3default);
+            sip3Title.setText(R.string.sip3default);
+           // sip3name.setText(str);
+            sip1Title.setText(R.string.sip1);
+            sip2Title.setText(R.string.sip2);
+            sip4Title.setText(R.string.sip4);
         }
         else if(isDefaultAccount(data,SIP4,context))
         {
-            sip4AccountBtn.setText(R.string.sip4default);
+            sip4Title.setText(R.string.sip4default);
+           // sip4name.setText(str);
+            sip1Title.setText(R.string.sip1);
+            sip2Title.setText(R.string.sip2);
+            sip3Title.setText(R.string.sip3);
         }
     }
     public  boolean isDefaultAccount(String data,String sipKey,Context context)
@@ -87,6 +111,33 @@ public class SipAccountState {
         editor.putString(putKey2,putKeyValue2);
         editor.commit();
     }
+    public  void updateImageView(ImageView image,Context context,int state,String userAccount,TextView textview)
+    {
+        String str = userAccount.substring(4);
+        if(image!=null&&textview!=null) {
+            Drawable drawable = context.getResources().getDrawable(STATE_DRAWABLE[state]);
+            image.setImageDrawable(drawable);
+            textview.setText(str);
+        }
+    }
+    public  int  getSipState(String stateStr)
+    {
+        int state;
+        if(stateStr.equals(REG_NONE)||stateStr.equals(REG_CLEAR))
+        {
+            state=STATE_UNKNOWN;
+
+        }
+        else if(stateStr.equals(REG_OK))
+        {
+            state=STATE_ENABLED;
+        }
+        else
+        {
+            state = STATE_DISABLED;
+        }
+        return state;
+    }
     public  void handleSipAccount(String data, Context context, View view)
     {
         String[] temp = null;
@@ -96,10 +147,20 @@ public class SipAccountState {
         int sip2Sta=0;
         int sip3Sta=0;
         int sip4Sta=0;
-        Button sip1AccountBtn =(Button)view.findViewById(R.id.sip1);
-        Button sip2AccountBtn =(Button)view.findViewById(R.id.sip2);
-        Button sip3AccountBtn =(Button)view.findViewById(R.id.sip3);
-        Button sip4AccountBtn =(Button)view.findViewById(R.id.sip4);
+        TextView sip1name =(TextView)view.findViewById(R.id.sipname1);
+        TextView sip2name =(TextView)view.findViewById(R.id.sipname2);
+        TextView sip3name =(TextView)view.findViewById(R.id.sipname3);
+        TextView sip4name =(TextView)view.findViewById(R.id.sipname4);
+
+        ImageView sip1AccountBtn =(ImageView)view.findViewById(R.id.sip1);
+        ImageView sip2AccountBtn =(ImageView)view.findViewById(R.id.sip2);
+        ImageView sip3AccountBtn =(ImageView)view.findViewById(R.id.sip3);
+        ImageView sip4AccountBtn =(ImageView)view.findViewById(R.id.sip4);
+
+        String sip1Account = SystemPropertiesProxy.get(context,"custom.lp.sip1","sip:101@192.168.0.110");
+        String sip2Account = SystemPropertiesProxy.get(context,"custom.lp.sip2","sip:102@192.168.0.110");
+        String sip3Account = SystemPropertiesProxy.get(context,"custom.lp.sip3","sip:103@192.168.0.110");
+        String sip4Account = SystemPropertiesProxy.get(context,"custom.lp.sip4","sip:104@192.168.0.110");
         temp = data.split(";");
         int count=0;
         for(int i=0;i<temp.length;i++)
@@ -116,88 +177,27 @@ public class SipAccountState {
         {
             for(int k=0;k<count;k++) {
                 Log.e("sip","userAccount = "+k+userAccount[k]+"state = "+state[k]);
-                switch (k) {
-                    case 0:
-                        if(state[k].equals(REG_NONE)||state[k].equals(REG_CLEAR))
-                        {
-                            sip1Sta=STATE_UNKNOWN;
-
-                        }
-                        else if(state[k].equals(REG_OK))
-                        {
-                            sip1Sta=STATE_ENABLED;
-                        }
-                        else
-                        {
-                            sip1Sta = STATE_DISABLED;
-                        }
-                        storeSipAccount(context,SIP1,SIPACCOUNT,userAccount[k],SIPSTATE,state[k]);
-                        //sSip1.onActualStateChange(context, intent, sip1Sta);
-                        Drawable drawable= context.getResources().getDrawable(STATE_DRAWABLE[sip1Sta]);
-                        /// 这一步必须要做,否则不会显示.
-                        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                        sip1AccountBtn.setCompoundDrawables(drawable,null,null,null);
-                        break;
-                    case 1:
-                        if(state[k].equals(REG_NONE)||state[k].equals(REG_CLEAR))
-                        {
-                            sip2Sta=STATE_UNKNOWN;
-                        }
-                        else if(state[k].equals(REG_OK))
-                        {
-                            sip2Sta=STATE_ENABLED;
-                        }
-                        else
-                        {
-                            sip2Sta = STATE_DISABLED;
-                        }
-                        storeSipAccount(context,SIP2,SIPACCOUNT,userAccount[k],SIPSTATE,state[k]);
-                        Drawable drawable1= context.getResources().getDrawable(STATE_DRAWABLE[sip2Sta]);
-                        /// 这一步必须要做,否则不会显示.
-                        drawable1.setBounds(0, 0, drawable1.getMinimumWidth(), drawable1.getMinimumHeight());
-                        sip2AccountBtn.setCompoundDrawables(drawable1,null,null,null);
-                        break;
-                    case 2:
-                        if(state[k].equals(REG_NONE)||state[k].equals(REG_CLEAR))
-                        {
-                            sip3Sta=STATE_UNKNOWN;
-                        }
-                        else if(state[k].equals(REG_OK))
-                        {
-                            sip3Sta=STATE_ENABLED;
-                        }
-                        else
-                        {
-                            sip3Sta = STATE_DISABLED;
-                        }
-                        storeSipAccount(context,SIP3,SIPACCOUNT,userAccount[k],SIPSTATE,state[k]);
-                        Drawable drawable2= context.getResources().getDrawable(STATE_DRAWABLE[sip3Sta]);
-                        /// 这一步必须要做,否则不会显示.
-                        drawable2.setBounds(0, 0, drawable2.getMinimumWidth(), drawable2.getMinimumHeight());
-                        sip3AccountBtn.setCompoundDrawables(drawable2,null,null,null);
-                        break;
-                    case 3:
-                        if(state[k].equals(REG_NONE)||state[k].equals(REG_CLEAR))
-                        {
-                            sip4Sta=STATE_UNKNOWN;
-                        }
-                        else if(state[k].equals(REG_OK))
-                        {
-                            sip4Sta=STATE_ENABLED;
-                        }
-                        else
-                        {
-                            sip4Sta = STATE_DISABLED;
-                        }
-                        storeSipAccount(context,SIP4,SIPACCOUNT,userAccount[k],SIPSTATE,state[k]);
-                        Drawable drawable3= context.getResources().getDrawable(STATE_DRAWABLE[sip4Sta]);
-                        /// 这一步必须要做,否则不会显示.
-                        drawable3.setBounds(0, 0, drawable3.getMinimumWidth(), drawable3.getMinimumHeight());
-                        sip4AccountBtn.setCompoundDrawables(drawable3,null,null,null);
-                        break;
-                    default:
-                        break;
+                if(sip1Account.equals(userAccount[k]))
+                {
+                    storeSipAccount(context,SIP1,SIPACCOUNT,userAccount[k],SIPSTATE,state[k]);
+                    updateImageView(sip1AccountBtn,context,getSipState(state[k]),userAccount[k],sip1name);
                 }
+                else if(sip2Account.equals(userAccount[k]))
+                {
+                    storeSipAccount(context,SIP2,SIPACCOUNT,userAccount[k],SIPSTATE,state[k]);
+                    updateImageView(sip2AccountBtn,context,getSipState(state[k]),userAccount[k],sip2name);
+                }
+                else if(sip3Account.equals(userAccount[k]))
+                {
+                    storeSipAccount(context,SIP3,SIPACCOUNT,userAccount[k],SIPSTATE,state[k]);
+                    updateImageView(sip3AccountBtn,context,getSipState(state[k]),userAccount[k],sip3name);
+                }
+                else if(sip4Account.equals(userAccount[k]))
+                {
+                    storeSipAccount(context,SIP4,SIPACCOUNT,userAccount[k],SIPSTATE,state[k]);
+                    updateImageView(sip4AccountBtn,context,getSipState(state[k]),userAccount[k],sip4name);
+                }
+
             }
         }
     }

@@ -512,7 +512,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                 mFloatingActionButtonController.scaleOut();
             }
         });
-
+        refreshAccounts();//wbin add
         mIsLandscape = getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE;
         mPreviouslySelectedTabIndex = ListsFragment.TAB_INDEX_SPEED_DIAL;

@@ -4,21 +4,39 @@
     android:layout_height="@dimen/sip_bar_height"
     android:background="@color/background_dialer_light">
 
-    <Button
+    <ImageView
         android:id="@+id/sip1"
         android:layout_width="@dimen/sip_btn_width"
         android:layout_height="@dimen/sip_btn_height"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/fab_blue"
-        android:drawableLeft="@drawable/error"
+        android:background="@color/shallow_blue"
+        android:src="@drawable/error"
         android:paddingLeft="@dimen/sip_btn_paddingleft"
         android:paddingRight="@dimen/sip_btn_paddingright"
         android:text="@string/sip1" />
-
+    <LinearLayout
+        android:layout_width="@dimen/sip_text_width"
+        android:layout_height="@dimen/sip_btn_height"
+        android:layout_toRightOf="@+id/sip1"
+        android:id="@+id/text1"
+        android:orientation="vertical"
+        android:background="@color/shallow_blue">
+        <TextView
+            android:layout_width="@dimen/sip_text_width"
+            android:layout_height="@dimen/sip_text_height"
+            android:id="@+id/siptitle1"
+            android:text="@string/sip1"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="@dimen/sip_text_width"
+            android:layout_height="@dimen/sip_text_height"
+            android:id="@+id/sipname1"
+            android:gravity="center"/>
+    </LinearLayout>
     <ImageView
         android:id="@+id/divider1"
-        android:layout_width="@dimen/sip_btn_width"
+        android:layout_width="@dimen/sip_bar_width"
         android:layout_height="@dimen/sip_divi_height"
         android:layout_alignLeft="@+id/sip1"
         android:layout_alignStart="@+id/sip1"
@@ -26,22 +44,38 @@
         android:background="@drawable/appwidget_settings_divider_holo"
         android:contentDescription="@null" />
 
-    <Button
+    <ImageView
         android:id="@+id/sip2"
         android:layout_width="@dimen/sip_btn_width"
         android:layout_height="@dimen/sip_btn_height"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/fab_blue"
-        android:drawableLeft="@drawable/error"
+        android:layout_below="@+id/divider1"
+        android:background="@color/shallow_blue"
         android:paddingLeft="@dimen/sip_btn_paddingleft"
         android:paddingRight="@dimen/sip_btn_paddingright"
-        android:text="@string/sip2"
-        android:layout_below="@+id/divider1"/>
-
+        android:src="@drawable/error"
+        android:text="@string/sip2" />
+    <LinearLayout
+        android:layout_width="@dimen/sip_text_width"
+        android:layout_height="@dimen/sip_btn_height"
+        android:layout_below="@+id/divider1"
+        android:layout_toRightOf="@+id/sip2"
+        android:orientation="vertical"
+        android:background="@color/shallow_blue">
+        <TextView
+            android:layout_width="@dimen/sip_text_width"
+            android:layout_height="@dimen/sip_text_height"
+            android:id="@+id/siptitle2"
+            android:text="@string/sip2"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="@dimen/sip_text_width"
+            android:layout_height="@dimen/sip_text_height"
+            android:id="@+id/sipname2"
+            android:gravity="center"/>
+    </LinearLayout>
     <ImageView
         android:id="@+id/divider2"
-        android:layout_width="@dimen/sip_btn_width"
+        android:layout_width="@dimen/sip_bar_width"
         android:layout_height="@dimen/sip_divi_height"
         android:layout_alignLeft="@+id/sip1"
         android:layout_alignStart="@+id/sip1"
@@ -49,44 +83,78 @@
         android:background="@drawable/appwidget_settings_divider_holo"
         android:contentDescription="@null" />
 
-    <Button
+    <ImageView
         android:id="@+id/sip3"
         android:layout_width="@dimen/sip_btn_width"
         android:layout_height="@dimen/sip_btn_height"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/fab_blue"
-        android:drawableLeft="@drawable/error"
+        android:background="@color/shallow_blue"
+        android:src="@drawable/error"
         android:paddingLeft="@dimen/sip_btn_paddingleft"
         android:paddingRight="@dimen/sip_btn_paddingright"
         android:text="@string/sip3"
         android:layout_below="@+id/divider2"/>
 
+    <LinearLayout
+        android:layout_width="@dimen/sip_text_width"
+        android:layout_height="@dimen/sip_btn_height"
+        android:layout_below="@+id/divider2"
+        android:layout_toRightOf="@+id/sip2"
+        android:orientation="vertical"
+        android:background="@color/shallow_blue">
+        <TextView
+            android:layout_width="@dimen/sip_text_width"
+            android:layout_height="@dimen/sip_text_height"
+            android:id="@+id/siptitle3"
+            android:text="@string/sip3"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="@dimen/sip_text_width"
+            android:layout_height="@dimen/sip_text_height"
+            android:id="@+id/sipname3"
+            android:gravity="center"/>
+    </LinearLayout>
     <ImageView
         android:id="@+id/divider3"
-        android:layout_width="@dimen/sip_btn_width"
+        android:layout_width="@dimen/sip_bar_width"
         android:layout_height="@dimen/sip_divi_height"
         android:layout_alignLeft="@+id/sip1"
         android:layout_alignStart="@+id/sip1"
         android:layout_below="@+id/sip3"
         android:background="@drawable/appwidget_settings_divider_holo"
         android:contentDescription="@null" />
-    <Button
+    <ImageView
         android:id="@+id/sip4"
         android:layout_width="@dimen/sip_btn_width"
         android:layout_height="@dimen/sip_btn_height"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/fab_blue"
-        android:drawableLeft="@drawable/error"
+        android:background="@color/shallow_blue"
+        android:src="@drawable/error"
         android:paddingLeft="@dimen/sip_btn_paddingleft"
         android:paddingRight="@dimen/sip_btn_paddingright"
         android:text="@string/sip4"
         android:layout_below="@+id/divider3"/>
 
+    <LinearLayout
+        android:layout_width="@dimen/sip_text_width"
+        android:layout_height="@dimen/sip_btn_height"
+        android:layout_below="@+id/divider3"
+        android:layout_toRightOf="@+id/sip2"
+        android:orientation="vertical"
+        android:background="@color/shallow_blue">
+        <TextView
+            android:layout_width="@dimen/sip_text_width"
+            android:layout_height="@dimen/sip_text_height"
+            android:id="@+id/siptitle4"
+            android:text="@string/sip4"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="@dimen/sip_text_width"
+            android:layout_height="@dimen/sip_text_height"
+            android:id="@+id/sipname4"
+            android:gravity="center"/>
+    </LinearLayout>
     <ImageView
         android:id="@+id/divider4"
-        android:layout_width="@dimen/sip_btn_width"
+        android:layout_width="@dimen/sip_bar_width"
         android:layout_height="@dimen/sip_divi_height"
         android:layout_alignLeft="@+id/sip1"
         android:layout_alignStart="@+id/sip1"

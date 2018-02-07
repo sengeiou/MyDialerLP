@@ -274,4 +274,13 @@
 
 
     <string name="required_permissions_promo">通讯录需要同时获得“电话”,“通讯录”,“存储空间”和“位置”的访问权限。"</string>
+	
+	<string name="sip1">线路1</string>
+    <string name="sip2">线路2</string>
+    <string name="sip3">线路3</string>
+    <string name="sip4">线路4</string>
+    <string name="sip1default">线路1(默认)</string>
+    <string name="sip2default">线路2(默认)</string>
+    <string name="sip3default">线路3(默认)</string>
+    <string name="sip4default">线路4(默认)</string>
 </resources>
