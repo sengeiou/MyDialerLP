@@ -450,9 +450,9 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                 LinphonePreferences.instance().firstLaunchSuccessful();
 
             } else {
-                startActivity(new Intent().setClass(this, AssistantActivity.class));
-                finish();
-                return;
+               // startActivity(new Intent().setClass(this, AssistantActivity.class));
+               // finish();
+               // return;
             }
         }
         //end
@@ -669,18 +669,20 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     //add by wzb
     public void refreshAccounts(){
         int accountNum=LinphoneManager.getLc().getProxyConfigList().length;
-        Wlog.e("accountNum="+accountNum);
-        String allAccount = "sip;sip";
-        for(LinphoneProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()){
-            //if(proxyConfig != LinphoneManager.getLc().getDefaultProxyConfig()){
-                Wlog.e("account:"+proxyConfig.getAddress().asStringUriOnly());
-                Wlog.e("account state:"+proxyConfig.getState());
-            //}
-            allAccount = allAccount + ";" + proxyConfig.getAddress().asStringUriOnly() + ";" + proxyConfig.getState();
+        if(accountNum>0) {
+            Wlog.e("accountNum=" + accountNum);
+            String allAccount = "sip;sip";
+            for (LinphoneProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()) {
+                //if(proxyConfig != LinphoneManager.getLc().getDefaultProxyConfig()){
+                Wlog.e("account:" + proxyConfig.getAddress().asStringUriOnly());
+                Wlog.e("account state:" + proxyConfig.getState());
+                //}
+                allAccount = allAccount + ";" + proxyConfig.getAddress().asStringUriOnly() + ";" + proxyConfig.getState();
+            }
+            String defaultAccount = LinphoneManager.getLc().getDefaultProxyConfig().getAddress().asStringUriOnly();
+            Wlog.e("defaultAccount=" + defaultAccount);
+            updateSipAccountbtn(allAccount, defaultAccount);
         }
-        String defaultAccount=LinphoneManager.getLc().getDefaultProxyConfig().getAddress().asStringUriOnly();
-        Wlog.e("defaultAccount="+defaultAccount);
-        updateSipAccountbtn(allAccount,defaultAccount);
 
     }
     //end
