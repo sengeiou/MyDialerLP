@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.lang.reflect.Method;
+
 /**
  * Created by Administrator on 2018/2/3.
  */
@@ -138,6 +140,27 @@ public class SipAccountState {
         }
         return state;
     }
+    public static  String getProperty(String key, String defaultValue) {
+        String value = defaultValue;
+        try {
+            Class<?> c = Class.forName("android.os.SystemProperties");
+            Method get = c.getMethod("get", String.class, String.class);
+            value = (String)(get.invoke(c, key, "unknown" ));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            return value;
+        }
+    }
+    public static void setProperty(String key, String value) {
+        try {
+            Class<?> c = Class.forName("android.os.SystemProperties");
+            Method set = c.getMethod("set", String.class, String.class);
+            set.invoke(c, key, value );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public  void handleSipAccount(String data, Context context, View view)
     {
         String[] temp = null;
@@ -156,11 +179,13 @@ public class SipAccountState {
         ImageView sip2AccountBtn =(ImageView)view.findViewById(R.id.sip2);
         ImageView sip3AccountBtn =(ImageView)view.findViewById(R.id.sip3);
         ImageView sip4AccountBtn =(ImageView)view.findViewById(R.id.sip4);
-
-        String sip1Account = SystemPropertiesProxy.get(context,"custom.lp.sip1","sip:101@192.168.0.110");
-        String sip2Account = SystemPropertiesProxy.get(context,"custom.lp.sip2","sip:102@192.168.0.110");
-        String sip3Account = SystemPropertiesProxy.get(context,"custom.lp.sip3","sip:103@192.168.0.110");
-        String sip4Account = SystemPropertiesProxy.get(context,"custom.lp.sip4","sip:104@192.168.0.110");
+        String sip1Account = getProperty("custom.lp.sip1","custom.lp.sip");
+        String sip2Account = getProperty("custom.lp.sip2","custom.lp.sip");
+        String sip3Account = getProperty("custom.lp.sip3","custom.lp.sip");
+        String sip4Account = getProperty("custom.lp.sip4","");
+        Log.e("sip","sip1Account = "+sip1Account);
+        Log.e("sip","sip2Account = "+sip2Account);
+        Log.e("sip","sip3Account = "+sip3Account);
         temp = data.split(";");
         int count=0;
         for(int i=0;i<temp.length;i++)
