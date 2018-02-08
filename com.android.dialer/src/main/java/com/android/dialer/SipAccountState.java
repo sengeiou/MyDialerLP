@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.linphone.LinphoneManager;
+import org.linphone.wzb.Wlog;
+
 import java.lang.reflect.Method;
 
 /**
@@ -66,12 +69,12 @@ public class SipAccountState {
             sip2Title.setText(R.string.sip2);
             sip3Title.setText(R.string.sip3);
             sip4Title.setText(R.string.sip4);
-          //  sip1name.setText(str);
+            //  sip1name.setText(str);
         }
         else if(isDefaultAccount(data,SIP2,context))
         {
             sip2Title.setText(R.string.sip2default);
-           // sip2name.setText(str);
+            // sip2name.setText(str);
             sip1Title.setText(R.string.sip1);
             sip3Title.setText(R.string.sip3);
             sip4Title.setText(R.string.sip4);
@@ -79,7 +82,7 @@ public class SipAccountState {
         else if(isDefaultAccount(data,SIP3,context))
         {
             sip3Title.setText(R.string.sip3default);
-           // sip3name.setText(str);
+            // sip3name.setText(str);
             sip1Title.setText(R.string.sip1);
             sip2Title.setText(R.string.sip2);
             sip4Title.setText(R.string.sip4);
@@ -87,12 +90,15 @@ public class SipAccountState {
         else if(isDefaultAccount(data,SIP4,context))
         {
             sip4Title.setText(R.string.sip4default);
-           // sip4name.setText(str);
+            // sip4name.setText(str);
             sip1Title.setText(R.string.sip1);
             sip2Title.setText(R.string.sip2);
             sip3Title.setText(R.string.sip3);
         }
     }
+
+
+
     public  boolean isDefaultAccount(String data,String sipKey,Context context)
     {
         SharedPreferences sip=context.getSharedPreferences(sipKey, 0);
@@ -115,13 +121,42 @@ public class SipAccountState {
     }
     public  void updateImageView(ImageView image,Context context,int state,String userAccount,TextView textview)
     {
-        String str = userAccount.substring(4);
+
         if(image!=null&&textview!=null) {
             Drawable drawable = context.getResources().getDrawable(STATE_DRAWABLE[state]);
             image.setImageDrawable(drawable);
-            textview.setText(str);
+            textview.setText(userAccount);
         }
     }
+
+
+    public  void updateAccountView(Context context,String userAccount,TextView textview)
+    {
+        String info=userAccount;
+        if(textview!=null) {
+            int accountNum= LinphoneManager.getLc().getProxyConfigList().length;
+            if(accountNum>0){
+                String defaultAccount = LinphoneManager.getLc().getDefaultProxyConfig().getAddress().asStringUriOnly();
+                if(defaultAccount.equals(info)){
+                    info=info+"(默认)";
+                }
+            }
+            if(info.length()>=4)info=info.substring(4);
+            textview.setText(info);
+            textview.setTextSize(10f);
+        }
+    }
+
+    public  void updateStatusView(ImageView image,Context context,int state)
+    {
+
+        if(image!=null) {
+            Drawable drawable = context.getResources().getDrawable(STATE_DRAWABLE[state]);
+            image.setImageDrawable(drawable);
+
+        }
+    }
+
     public  int  getSipState(String stateStr)
     {
         int state;
@@ -145,7 +180,7 @@ public class SipAccountState {
         try {
             Class<?> c = Class.forName("android.os.SystemProperties");
             Method get = c.getMethod("get", String.class, String.class);
-            value = (String)(get.invoke(c, key, "unknown" ));
+            value = (String)(get.invoke(c, key, " " ));
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
@@ -161,6 +196,102 @@ public class SipAccountState {
             e.printStackTrace();
         }
     }
+
+
+    public void clearAllStatus(Context context,ImageView btn1,ImageView btn2,ImageView btn3,ImageView btn4){
+        if(btn1!=null){
+            Drawable drawable = context.getResources().getDrawable(STATE_DRAWABLE[2]);
+            btn1.setImageDrawable(drawable);
+        }
+
+        if(btn2!=null){
+            Drawable drawable = context.getResources().getDrawable(STATE_DRAWABLE[2]);
+            btn2.setImageDrawable(drawable);
+        }
+
+        if(btn3!=null){
+            Drawable drawable = context.getResources().getDrawable(STATE_DRAWABLE[2]);
+            btn3.setImageDrawable(drawable);
+        }
+
+        if(btn4!=null){
+            Drawable drawable = context.getResources().getDrawable(STATE_DRAWABLE[2]);
+            btn4.setImageDrawable(drawable);
+        }
+    }
+
+
+    public void refreshSipAccount(Context context, View view){
+        TextView sip1name =(TextView)view.findViewById(R.id.sipname1);
+        TextView sip2name =(TextView)view.findViewById(R.id.sipname2);
+        TextView sip3name =(TextView)view.findViewById(R.id.sipname3);
+        TextView sip4name =(TextView)view.findViewById(R.id.sipname4);
+        String sip1Account = getProperty("custom.lp.sip1","");
+        String sip2Account = getProperty("custom.lp.sip2","");
+        String sip3Account = getProperty("custom.lp.sip3","");
+        String sip4Account = getProperty("custom.lp.sip4","");
+        updateAccountView(context,sip1Account,sip1name);
+        updateAccountView(context,sip2Account,sip2name);
+        updateAccountView(context,sip3Account,sip3name);
+        updateAccountView(context,sip4Account,sip4name);
+    }
+
+    public  void refreshSipAccountStatus(String data, Context context, View view)
+    {
+        String[] temp = null;
+        String[] userAccount= new String[32];
+        String[] state =new String[32];
+
+        ImageView sip1AccountBtn =(ImageView)view.findViewById(R.id.sip1);
+        ImageView sip2AccountBtn =(ImageView)view.findViewById(R.id.sip2);
+        ImageView sip3AccountBtn =(ImageView)view.findViewById(R.id.sip3);
+        ImageView sip4AccountBtn =(ImageView)view.findViewById(R.id.sip4);
+        clearAllStatus(context,sip1AccountBtn,sip2AccountBtn,sip3AccountBtn,sip4AccountBtn);
+        String sip1Account = getProperty("custom.lp.sip1","");
+        String sip2Account = getProperty("custom.lp.sip2","");
+        String sip3Account = getProperty("custom.lp.sip3","");
+        String sip4Account = getProperty("custom.lp.sip4","");
+        Wlog.e("sip1="+sip1Account+" spi2="+sip2Account+" sip3="+sip3Account+" sip4="+sip4Account);
+        temp = data.split(";");
+        int count=0;
+        for(int i=0;i<temp.length;i++)
+        {
+            if(temp[i].startsWith("sip:"))
+            {
+                userAccount[count] = temp[i];
+                state[count] =temp[i+1];
+                count++;
+            }
+        }
+
+        if(count>0)
+        {
+            for(int k=0;k<count;k++) {
+                Wlog.e("userAccount = "+k+userAccount[k]+"state = "+state[k]);
+                if(sip1Account.equals(userAccount[k]))
+                {
+                    updateStatusView(sip1AccountBtn,context,getSipState(state[k]));
+                }
+                else if(sip2Account.equals(userAccount[k]))
+                {
+
+                    updateStatusView(sip2AccountBtn,context,getSipState(state[k]));
+                }
+                else if(sip3Account.equals(userAccount[k]))
+                {
+
+                    updateStatusView(sip3AccountBtn,context,getSipState(state[k]));
+                }
+                else if(sip4Account.equals(userAccount[k]))
+                {
+
+                    updateStatusView(sip4AccountBtn,context,getSipState(state[k]));
+                }
+
+            }
+        }
+    }
+
     public  void handleSipAccount(String data, Context context, View view)
     {
         String[] temp = null;
@@ -179,9 +310,9 @@ public class SipAccountState {
         ImageView sip2AccountBtn =(ImageView)view.findViewById(R.id.sip2);
         ImageView sip3AccountBtn =(ImageView)view.findViewById(R.id.sip3);
         ImageView sip4AccountBtn =(ImageView)view.findViewById(R.id.sip4);
-        String sip1Account = getProperty("custom.lp.sip1","custom.lp.sip");
-        String sip2Account = getProperty("custom.lp.sip2","custom.lp.sip");
-        String sip3Account = getProperty("custom.lp.sip3","custom.lp.sip");
+        String sip1Account = getProperty("custom.lp.sip1","");
+        String sip2Account = getProperty("custom.lp.sip2","");
+        String sip3Account = getProperty("custom.lp.sip3","");
         String sip4Account = getProperty("custom.lp.sip4","");
         Log.e("sip","sip1Account = "+sip1Account);
         Log.e("sip","sip2Account = "+sip2Account);

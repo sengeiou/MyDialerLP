@@ -284,7 +284,6 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     private boolean doNotGoToCallActivity = false;
 
 
-
     public static final boolean isInstanciated() {
         return instance != null;
     }
@@ -445,14 +444,14 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             return;
         }
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             if (LinphonePreferences.instance().getAccountCount() > 0) {
                 LinphonePreferences.instance().firstLaunchSuccessful();
 
             } else {
-               // startActivity(new Intent().setClass(this, AssistantActivity.class));
-               // finish();
-               // return;
+                // startActivity(new Intent().setClass(this, AssistantActivity.class));
+                // finish();
+                // return;
             }
         }
         //end
@@ -512,7 +511,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                 mFloatingActionButtonController.scaleOut();
             }
         });
-        refreshAccounts();//wbin add
+
         mIsLandscape = getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE;
         mPreviouslySelectedTabIndex = ListsFragment.TAB_INDEX_SPEED_DIAL;
@@ -593,10 +592,10 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             newProxyConfig = getIntent().getExtras().getBoolean("isNewProxyConfig");
         }
 
-        mListener = new LinphoneCoreListenerBase(){
+        mListener = new LinphoneCoreListenerBase() {
             @Override
             public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
-               // displayMissedChats(getUnreadMessageCount());
+                // displayMissedChats(getUnreadMessageCount());
             }
 
             @Override
@@ -611,32 +610,32 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
                 refreshAccounts();
 
-                if(getResources().getBoolean(R.bool.use_phone_number_validation)) {
+                if (getResources().getBoolean(R.bool.use_phone_number_validation)) {
                     if (state.equals(LinphoneCore.RegistrationState.RegistrationOk)) {
                         LinphoneManager.getInstance().isAccountWithAlias();
                     }
                 }
 
-                if(state.equals(LinphoneCore.RegistrationState.RegistrationFailed) && newProxyConfig) {
+                if (state.equals(LinphoneCore.RegistrationState.RegistrationFailed) && newProxyConfig) {
                     newProxyConfig = false;
                     if (proxy.getError() == Reason.BadCredentials) {
                         //displayCustomToast(getString(R.string.error_bad_credentials), Toast.LENGTH_LONG);
-                        ToastUtil.showLongToast(DialtactsActivity.this,getString(R.string.error_bad_credentials));
+                        ToastUtil.showLongToast(DialtactsActivity.this, getString(R.string.error_bad_credentials));
                     }
                     if (proxy.getError() == Reason.Unauthorized) {
-                       // displayCustomToast(getString(R.string.error_unauthorized), Toast.LENGTH_LONG);
-                        ToastUtil.showLongToast(DialtactsActivity.this,getString(R.string.error_unauthorized));
+                        // displayCustomToast(getString(R.string.error_unauthorized), Toast.LENGTH_LONG);
+                        ToastUtil.showLongToast(DialtactsActivity.this, getString(R.string.error_unauthorized));
                     }
                     if (proxy.getError() == Reason.IOError) {
-                       // displayCustomToast(getString(R.string.error_io_error), Toast.LENGTH_LONG);
-                        ToastUtil.showLongToast(DialtactsActivity.this,getString(R.string.error_io_error));
+                        // displayCustomToast(getString(R.string.error_io_error), Toast.LENGTH_LONG);
+                        ToastUtil.showLongToast(DialtactsActivity.this, getString(R.string.error_io_error));
                     }
                 }
             }
 
             @Override
             public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
-                android.util.Log.e("wzb","dialtactsActivity state:"+state.value());
+                android.util.Log.e("wzb", "dialtactsActivity state:" + state.value());
                 if (state == State.IncomingReceived) {
 
                     startActivity(new Intent(DialtactsActivity.instance(), CallIncomingActivity.class));
@@ -647,7 +646,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                     //sendBroadcast(new Intent(CommonAction.CUSTOM_ACTION_GOTO_CALLOUTGOING));
                 } else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
                     resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
-                   // sendBroadcast(new Intent(CommonAction.CUSTOM_ACTION_GOTO_GoBackToCallIfStillRunning));
+                    // sendBroadcast(new Intent(CommonAction.CUSTOM_ACTION_GOTO_GoBackToCallIfStillRunning));
                 }
 
                 int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
@@ -658,47 +657,65 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
         //end
     }
-	    public void updateSipAccountbtn(String data,String defaultAccount) {
-            SipAccountState sas =new SipAccountState();
-            final View sipAccount = findViewById(
-                    R.id.sip_container);
-            sas.handleSipAccount(data,getApplicationContext(),sipAccount);
-            sas.handleSipDefaultAccount(defaultAccount,getApplicationContext(),sipAccount);
+
+    public void updateSipAccountbtn(String data, String defaultAccount) {
+        SipAccountState sas = new SipAccountState();
+        final View sipAccount = findViewById(
+                R.id.sip_container);
+        sas.handleSipAccount(data, getApplicationContext(), sipAccount);
+        sas.handleSipDefaultAccount(defaultAccount, getApplicationContext(), sipAccount);
 
     }
+
+    public void refreshSipAccount() {
+        SipAccountState sas = new SipAccountState();
+        final View view = findViewById(
+                R.id.sip_container);
+        sas.refreshSipAccount(DialtactsActivity.this, view);
+
+    }
+
+    public void refreshSipAccountStatus(String data) {
+        SipAccountState sas = new SipAccountState();
+        final View view = findViewById(
+                R.id.sip_container);
+       sas.refreshSipAccountStatus(data,DialtactsActivity.this,view);
+
+    }
+
     //add by wzb
-    public void refreshAccounts(){
-        int accountNum=LinphoneManager.getLc().getProxyConfigList().length;
-        if(accountNum>0) {
-            Wlog.e("accountNum=" + accountNum);
-            String allAccount = "sip;sip";
-            for (LinphoneProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()) {
-                //if(proxyConfig != LinphoneManager.getLc().getDefaultProxyConfig()){
-                Wlog.e("account:" + proxyConfig.getAddress().asStringUriOnly());
-                Wlog.e("account state:" + proxyConfig.getState());
-                //}
-                allAccount = allAccount + ";" + proxyConfig.getAddress().asStringUriOnly() + ";" + proxyConfig.getState();
-            }
-            String defaultAccount = LinphoneManager.getLc().getDefaultProxyConfig().getAddress().asStringUriOnly();
-            Wlog.e("defaultAccount=" + defaultAccount);
-            updateSipAccountbtn(allAccount, defaultAccount);
+    public void refreshAccounts() {
+        int accountNum = LinphoneManager.getLc().getProxyConfigList().length;
+
+        Wlog.e("accountNum=" + accountNum);
+        String allAccount = "sip;sip";
+        for (LinphoneProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()) {
+            //if(proxyConfig != LinphoneManager.getLc().getDefaultProxyConfig()){
+            Wlog.e("account:" + proxyConfig.getAddress().asStringUriOnly());
+            Wlog.e("account state:" + proxyConfig.getState());
+            //}
+            allAccount = allAccount + ";" + proxyConfig.getAddress().asStringUriOnly() + ";" + proxyConfig.getState();
         }
+
+        refreshSipAccountStatus(allAccount);
+
 
     }
     //end
 
     //add by wzb
     private static final int CALL_ACTIVITY = 19;
+
     public void resetClassicMenuLayoutAndGoBackToCallIfStillRunning() {
-       // DialerFragment dialerFragment = DialerFragment.instance();
-       // if (dialerFragment != null) {
+        // DialerFragment dialerFragment = DialerFragment.instance();
+        // if (dialerFragment != null) {
         //    ((DialerFragment) dialerFragment).resetLayout(true);
-       // }
+        // }
 
         if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
             LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
             if (call.getState() == LinphoneCall.State.IncomingReceived) {
-                android.util.Log.e("wzb","111111111111");
+                android.util.Log.e("wzb", "111111111111");
                 startActivity(new Intent(DialtactsActivity.this, CallIncomingActivity.class));
 
             } else {
@@ -749,13 +766,13 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             lc.addListener(mListener);
         }
 
-        if(LinphonePreferences.instance().isFriendlistsubscriptionEnabled() && LinphoneManager.getLc().getDefaultProxyConfig() != null){
+        if (LinphonePreferences.instance().isFriendlistsubscriptionEnabled() && LinphoneManager.getLc().getDefaultProxyConfig() != null) {
             LinphoneManager.getInstance().subscribeFriendList(true);
         } else {
             LinphoneManager.getInstance().subscribeFriendList(false);
         }
         LinphoneManager.getInstance().changeStatusToOnline();
-        if (getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY ) {
+        if (getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY) {
             if (LinphoneManager.getLc().getCalls().length > 0) {
                 LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
                 LinphoneCall.State callState = call.getState();
@@ -829,6 +846,10 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         }
 
         setSearchBoxHint();
+
+        //add by wzb for refresh account
+        refreshSipAccount();
+        //end
 
         Trace.endSection();
         StatisticsUtil.onResume(this);
@@ -1020,12 +1041,12 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             }
         }
         //add by wzb
-        if(requestCode == CALL_ACTIVITY && resultCode == Activity.RESULT_FIRST_USER){
+        if (requestCode == CALL_ACTIVITY && resultCode == Activity.RESULT_FIRST_USER) {
             getIntent().putExtra("PreviousActivity", CALL_ACTIVITY);
             if (LinphoneManager.getLc().getCallsNb() > 0) {
-                android.util.Log.e("wzb","aaaaa");
+                android.util.Log.e("wzb", "aaaaa");
             } else {
-                android.util.Log.e("wzb","bbb");
+                android.util.Log.e("wzb", "bbb");
                 resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
             }
         }
@@ -1046,6 +1067,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     /**
      * Initiates a fragment transaction to show the dialpad fragment. Animations and other visual
      * updates are handled by a callback which is invoked after the dialpad fragment is shown.
+     *
      * @see #onDialpadShown
      */
     private void showDialpadFragment(boolean animate) {
@@ -1099,6 +1121,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     /**
      * Initiates animations and other visual updates to hide the dialpad. The fragment is hidden in
      * a callback after the hide animation ends.
+     *
      * @see #commitDialpadFragmentHide
      */
     public void hideDialpadFragment(boolean animate, boolean clearDialpad) {
@@ -1208,7 +1231,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         return false;
     }
 
-    protected int getSearchBoxHint () {
+    protected int getSearchBoxHint() {
         return R.string.dialer_hint_find_contact;
     }
 
@@ -1295,8 +1318,8 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     //end
 
     //add by wzb 20180205
-    public void gotoCall(String number,String name){
-        LinphoneManager.getInstance().newOutgoingCall(number,name);
+    public void gotoCall(String number, String name) {
+        LinphoneManager.getInstance().newOutgoingCall(number, name);
     }
     //end
 
@@ -1362,7 +1385,9 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         //end
     }
 
-    /** Returns true if the given intent contains a phone number to populate the dialer with */
+    /**
+     * Returns true if the given intent contains a phone number to populate the dialer with
+     */
     private boolean isDialIntent(Intent intent) {
         final String action = intent.getAction();
         if (Intent.ACTION_DIAL.equals(action) || ACTION_TOUCH_DIALER.equals(action)) {
@@ -1520,7 +1545,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             DialerUtils.hideInputMethod(mParentLayout);
         } else {
             //add by wzb
-            if(true){//move to back
+            if (true) {//move to back
                 moveTaskToBack(true);
                 return;
             }
@@ -1648,7 +1673,8 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     }
 
     @Override
-    public void onDroppedOnRemove() {}
+    public void onDroppedOnRemove() {
+    }
 
     /**
      * Allows the SpeedDialFragment to attach the drag controller to mRemoveViewContainer
