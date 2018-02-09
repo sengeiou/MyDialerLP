@@ -710,6 +710,22 @@ public class LinphonePreferences {
 
 	}
 
+	//add by wzb 20180209
+	public int getIndexBySipUrl(String url){
+		int accountNum=LinphoneManager.getLc().getProxyConfigList().length;
+			if(accountNum>0) {
+					int i=0;
+					for (LinphoneProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()) {
+						if(proxyConfig.getAddress().asStringUriOnly().equals(url)){
+							return i;
+						}
+						i++;
+					}
+			}
+			return -1;
+	}
+	//end
+
 	//add by wzb for set default account by sip url 20180203
 	public void setDefaultAccountBySipUrl(String url){
         int accountNum=LinphoneManager.getLc().getProxyConfigList().length;

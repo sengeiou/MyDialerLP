@@ -1,18 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--Custom-->
-  <string name="app_name">Linphone</string>
-  <string name="service_name">Linphone 服务</string>
-  <string name="addressbook_label">Linphone</string>
-  <string name="notification_title">Linphone</string>
+  <string name="app_name">Sip</string>
+  <string name="service_name">Sip 服务</string>
+  <string name="addressbook_label">Sip</string>
+  <string name="notification_title">Sip</string>
   <string name="wait_dialog_text">启动中</string>
   <string name="notification_registered">%s 已注册</string>
   <string name="notification_register_failure">%s 无法注册</string>
   <string name="tunnel_host"></string>
-  <string name="about_version">Linphone Android %s</string>
+  <string name="about_version">Sip Android %s</string>
   <string name="about_text">GNU General Public License V2\n © 2010-2016 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
-  <string name="sync_account_name">Linphone 联系人</string>
+  <string name="sync_account_name">Sip 联系人</string>
   <!--Common-->
   <string name="username">使用者名称</string>
   <string name="phone_number">电话号码</string>
