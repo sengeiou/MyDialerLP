@@ -14,6 +14,7 @@ import org.linphone.LinphoneApplication;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCoreException;
 import org.linphone.wzb.CommonAction;
 import org.linphone.wzb.util.ToastUtil;
 
@@ -75,8 +76,34 @@ public class DialerCoreReceiver extends BroadcastReceiver{
             String number=intent.getStringExtra("number");
             String displayname=intent.getStringExtra("name");
             if(!TextUtils.isEmpty(number))DialtactsActivity.instance().gotoCall(number,displayname);
+        }else if(action.equals("com.custom.lp_DIRECT_CALL")){
+            String number=intent.getStringExtra("number");
+            String displayname=intent.getStringExtra("name");
+            if(!TextUtils.isEmpty(number))callOutgoing(context,number,displayname);
         }
     }
 
+
+    private void callOutgoing(Context context,String number,String name) {
+        try {
+            if (!LinphoneManager.getInstance().acceptCallIfIncomingPending()) {
+
+                LinphoneManager.getInstance().newOutgoingCall(number, name);
+
+                context.startActivity(new Intent()
+                        .setClass(context, DialtactsActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+
+            }
+        } catch (LinphoneCoreException e) {
+            LinphoneManager.getInstance().terminateCall();
+        }
+
+        try {
+
+        } catch (Exception e) {
+
+        }
+    }
 
 }

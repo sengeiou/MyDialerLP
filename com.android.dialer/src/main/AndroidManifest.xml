@@ -441,6 +441,7 @@
                 <action android:name="com.custom.lp.DEL_ACCOUNT"/>
                 <action android:name="com.custom.lp.SET_DEFAULT"/>
                 <action android:name="com.custom.lp_GOTO_CALL"/>
+                <action android:name="com.custom.lp_DIRECT_CALL"/>
             </intent-filter>
         </receiver>
 
