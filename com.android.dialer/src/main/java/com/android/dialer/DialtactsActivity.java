@@ -849,6 +849,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
         //add by wzb for refresh account
         refreshSipAccount();
+        refreshAccounts();
         //end
 
         Trace.endSection();
