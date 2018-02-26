@@ -442,6 +442,8 @@
                 <action android:name="com.custom.lp.SET_DEFAULT"/>
                 <action android:name="com.custom.lp_GOTO_CALL"/>
                 <action android:name="com.custom.lp_DIRECT_CALL"/>
+                <action android:name="com.android.custom.hall_down"/>
+                <action android:name="com.android.custom.hall_up"/>
             </intent-filter>
         </receiver>
 

@@ -16,6 +16,7 @@ import org.linphone.LinphonePreferences;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.wzb.CommonAction;
+import org.linphone.wzb.Wlog;
 import org.linphone.wzb.util.ToastUtil;
 
 /**
@@ -80,7 +81,34 @@ public class DialerCoreReceiver extends BroadcastReceiver{
             String number=intent.getStringExtra("number");
             String displayname=intent.getStringExtra("name");
             if(!TextUtils.isEmpty(number))callOutgoing(context,number,displayname);
+        }else if(action.equals("com.android.custom.hall_up")){
+            Wlog.e("######app"+MyLifecycleHandler.isApplicationInForeground());
+            if(!MyLifecycleHandler.isApplicationInForeground()){
+                context.startActivity(new Intent()
+                        .setClass(context, DialtactsActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            }
+            hall_up();
+        }else if(action.equals("com.android.custom.hall_down")){
+            hall_down();
         }
+    }
+
+
+    private void hall_up(){
+        GpioCtrl.gpioSet(87,1);
+        GpioCtrl.gpioSet(95,0);
+
+        GpioCtrl.gpioSet(98,0);
+        GpioCtrl.gpioSet(1,1);
+    }
+
+    private void hall_down(){
+        GpioCtrl.gpioSet(1,0);
+
+
+        GpioCtrl.gpioSet(60,1);
+        GpioCtrl.gpioSet(95,1);
     }
 
 

@@ -26,6 +26,7 @@ import com.android.contacts.common.extensions.ExtensionsFactory;
 import com.android.contacts.common.testing.NeededForTesting;
 import com.android.dialer.database.FilteredNumberAsyncQueryHandler;
 import com.android.dialer.filterednumber.BlockedNumbersAutoMigrator;
+import com.android.dialer.wzb.MyLifecycleHandler;
 import com.umeng.analytics.MobclickAgent;
 
 import org.linphone.LinphoneApplication;
@@ -50,6 +51,7 @@ public class DialerApplication extends Application {
         Trace.endSection();
 
         MobclickAgent.setDebugMode(true);
+        registerActivityLifecycleCallbacks(new MyLifecycleHandler());
         initLinphone();
     }
 
