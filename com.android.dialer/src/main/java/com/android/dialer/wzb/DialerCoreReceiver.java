@@ -13,11 +13,14 @@ import org.linphone.CallOutgoingActivity;
 import org.linphone.LinphoneApplication;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
+import org.linphone.LinphoneService;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.wzb.CommonAction;
 import org.linphone.wzb.Wlog;
 import org.linphone.wzb.util.ToastUtil;
+
+import static android.content.Intent.ACTION_MAIN;
 
 /**
  * Created by Administrator on 2018-01-29.
@@ -91,6 +94,8 @@ public class DialerCoreReceiver extends BroadcastReceiver{
             hall_up();
         }else if(action.equals("com.android.custom.hall_down")){
             hall_down();
+        }else if(action.equals("com.android.custom.boot_completed")){
+            context.startService(new Intent(ACTION_MAIN).setClass(context, LinphoneService.class));
         }
     }
 

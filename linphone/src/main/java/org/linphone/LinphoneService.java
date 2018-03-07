@@ -290,7 +290,7 @@ public final class LinphoneService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
+		Wlog.e("$$$$$ LinphoneService onCreate $$$$$$$$");
 		setupActivityMonitor();
 		// In case restart after a crash. Main in LinphoneActivity
 		mNotificationTitle = getString(R.string.service_name);
