@@ -24,6 +24,9 @@ import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.mediastream.Log;
+import org.linphone.wzb.Wlog;
+
+import java.text.SimpleDateFormat;
 
 
 /**
@@ -53,6 +56,12 @@ public class CallManager {
 		LinphoneCore lc = LinphoneManager.getLc();
 		
 		LinphoneCallParams params = lc.createCallParams(null);
+		Wlog.e("wzb inviteAddress=======");
+		//test
+		String temp_date=new SimpleDateFormat("yyyyMMddHHmmss")
+				.format(System.currentTimeMillis());
+		params.setRecordFile("/sdcard/"+temp_date+"_lprecord.wav");
+		//end
 		bm().updateWithProfileSettings(lc, params);
 
 		if (videoEnabled && params.getVideoEnabled()) {

@@ -15,10 +15,14 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCallParams;
+import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.wzb.CommonAction;
 import org.linphone.wzb.Wlog;
 import org.linphone.wzb.util.ToastUtil;
+
+import java.text.SimpleDateFormat;
 
 import static android.content.Intent.ACTION_MAIN;
 
@@ -92,8 +96,19 @@ public class DialerCoreReceiver extends BroadcastReceiver{
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }
             hall_up();
+            //test
+            String temp_date=new SimpleDateFormat("yyyyMMddHHmmss")
+                    .format(System.currentTimeMillis());
+            final LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+           // LinphoneCallParams params = LinphoneManager.getLc().createCallParams(call);
+           // params.setRecordFile("/sdcard/"+temp_date+"_lprecord.wav");
+            //int ret=LinphoneManager.getLc().updateCall(call, params);
+            //Wlog.e("set params ret="+ret);
+            call.startRecording();
+            //end
         }else if(action.equals("com.android.custom.hall_down")){
             hall_down();
+            LinphoneManager.getLc().getCurrentCall().stopRecording();
         }else if(action.equals("com.android.custom.boot_completed")){
             context.startService(new Intent(ACTION_MAIN).setClass(context, LinphoneService.class));
         }
