@@ -283,4 +283,6 @@
     <string name="sip2default">线路2(默认)</string>
     <string name="sip3default">线路3(默认)</string>
     <string name="sip4default">线路4(默认)</string>
+    <!--zx add for LDAP-->
+    <string name="tab_ldap">LDAP</string>
 </resources>

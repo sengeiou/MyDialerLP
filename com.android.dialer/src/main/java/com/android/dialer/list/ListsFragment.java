@@ -38,6 +38,7 @@ import com.android.dialer.R;
 import com.android.dialer.calllog.CallLogFragment;
 import com.android.dialer.calllog.CallLogNotificationsHelper;
 import com.android.dialer.calllog.CallLogQueryHandler;
+import com.android.dialer.calllog.InternetContactFragment;
 import com.android.dialer.calllog.VisualVoicemailCallLogFragment;
 import com.android.dialer.logging.Logger;
 import com.android.dialer.logging.ScreenEvent;
@@ -69,10 +70,11 @@ public class ListsFragment extends Fragment
     public static final int TAB_INDEX_SPEED_DIAL = 0;
     public static final int TAB_INDEX_HISTORY = 1;
     public static final int TAB_INDEX_ALL_CONTACTS = 2;
-    public static final int TAB_INDEX_VOICEMAIL = 3;
+    public static final int TAB_INDEX_LDAP = 3;
+    public static final int TAB_INDEX_VOICEMAIL = 4;  //zx modify TAB_INDEX_VOICEMAIL = 3;
 
-    public static final int TAB_COUNT_DEFAULT = 3;
-    public static final int TAB_COUNT_WITH_VOICEMAIL = 4;
+    public static final int TAB_COUNT_DEFAULT = 4;  //zx modify TAB_COUNT_DEFAULT = 3;
+    public static final int TAB_COUNT_WITH_VOICEMAIL = 5;
 
     public interface HostInterface {
         public ActionBarController getActionBarController();
@@ -90,7 +92,7 @@ public class ListsFragment extends Fragment
     private HistoryListFragment mHistoryFragment;//wzb test
     private AllContactsFragment mAllContactsFragment;
     private CallLogFragment mVoicemailFragment;
-
+    private InternetContactFragment mLDAPFragment; //zx add
     private SharedPreferences mPrefs;
     private boolean mHasActiveVoicemailProvider;
     private boolean mHasFetchedVoicemailStatus;
@@ -139,6 +141,10 @@ public class ListsFragment extends Fragment
                 case TAB_INDEX_VOICEMAIL:
                     mVoicemailFragment = new VisualVoicemailCallLogFragment();
                     return mVoicemailFragment;
+                //zx add
+                case TAB_INDEX_LDAP:
+                    mLDAPFragment = new InternetContactFragment();
+                    return mLDAPFragment;
             }
             throw new IllegalStateException("No fragment at position " + position);
         }
@@ -158,6 +164,9 @@ public class ListsFragment extends Fragment
                 mAllContactsFragment = (AllContactsFragment) fragment;
             } else if (fragment instanceof CallLogFragment && position == TAB_INDEX_VOICEMAIL) {
                 mVoicemailFragment = (CallLogFragment) fragment;
+            }//zx add
+            else if (fragment instanceof InternetContactFragment && position == TAB_INDEX_LDAP) {
+                mLDAPFragment = (InternetContactFragment) fragment;
             }
             mFragments.set(position, fragment);
             return fragment;
@@ -241,12 +250,14 @@ public class ListsFragment extends Fragment
         mTabTitles[TAB_INDEX_SPEED_DIAL] = getResources().getString(R.string.tab_speed_dial);
         mTabTitles[TAB_INDEX_HISTORY] = getResources().getString(R.string.tab_history);
         mTabTitles[TAB_INDEX_ALL_CONTACTS] = getResources().getString(R.string.tab_all_contacts);
+        mTabTitles[TAB_INDEX_LDAP] = getResources().getString(R.string.tab_ldap);//zx add
         mTabTitles[TAB_INDEX_VOICEMAIL] = getResources().getString(R.string.tab_voicemail);
 
         mTabIcons = new int[TAB_COUNT_WITH_VOICEMAIL];
         mTabIcons[TAB_INDEX_SPEED_DIAL] = R.drawable.ic_grade_24dp;
         mTabIcons[TAB_INDEX_HISTORY] = R.drawable.ic_schedule_24dp;
         mTabIcons[TAB_INDEX_ALL_CONTACTS] = R.drawable.ic_people_24dp;
+        mTabIcons[TAB_INDEX_LDAP] = R.drawable.ic_voicemail_24dp;//zx add
         mTabIcons[TAB_INDEX_VOICEMAIL] = R.drawable.ic_voicemail_24dp;
 
         mViewPagerTabs = (ViewPagerTabs) parentView.findViewById(R.id.lists_pager_header);
@@ -474,6 +485,9 @@ public class ListsFragment extends Fragment
                 break;
             case TAB_INDEX_VOICEMAIL:
                 screenType = ScreenEvent.VOICEMAIL_LOG;
+            //zx add
+            case TAB_INDEX_LDAP:
+                screenType = ScreenEvent.UNKNOWN;
             default:
                 return;
         }

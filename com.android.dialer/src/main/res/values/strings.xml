@@ -1077,4 +1077,6 @@
     <string name="sip2default">SIP2(默认)</string>
     <string name="sip3default">SIP3(默认)</string>
     <string name="sip4default">SIP4(默认)</string>
+    <!--zx add for LDAP-->
+    <string name="tab_ldap">LDAP</string>
 </resources>
