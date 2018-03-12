@@ -280,6 +280,9 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 				refreshInCallActions();
 				return;
 			} else {
+				//add by wzb for default speaker
+				LinphoneManager.getLc().enableSpeaker(true);
+				//end
 				isSpeakerEnabled = LinphoneManager.getLc().isSpeakerEnabled();
 				isMicMuted = LinphoneManager.getLc().isMicMuted();
 			}

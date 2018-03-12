@@ -80,12 +80,19 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 		contactPicture = (ImageView) findViewById(R.id.contact_picture);
 
 		isMicMuted = false;
-		isSpeakerEnabled = false;
+		isSpeakerEnabled = true;//false;
 
 		micro = (ImageView) findViewById(R.id.micro);
 		micro.setOnClickListener(this);
 		speaker = (ImageView) findViewById(R.id.speaker);
 		speaker.setOnClickListener(this);
+		//add by wzb
+		if(isSpeakerEnabled) {
+			speaker.setImageResource(R.drawable.speaker_selected);
+		} else {
+			speaker.setImageResource(R.drawable.speaker_default);
+		}
+		//end
 
 		// set this flag so this activity will stay in front of the keyguard
 		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
