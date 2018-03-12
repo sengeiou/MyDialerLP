@@ -514,6 +514,17 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		displayMissedChats();
 	}
 
+	//add by wzb
+	public void refreshSpeaker(){
+		isSpeakerEnabled=LinphoneManager.getLc().isSpeakerEnabled();
+		if (isSpeakerEnabled) {
+			speaker.setImageResource(R.drawable.speaker_selected);
+		} else {
+			speaker.setImageResource(R.drawable.speaker_default);
+		}
+	}
+	//end
+
 	private void refreshInCallActions() {
 		if (!LinphonePreferences.instance().isVideoEnabled() || isConferenceRunning) {
 			enabledVideoButton(false);
@@ -902,10 +913,16 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			LinphoneManager.getInstance().routeAudioToSpeaker();
 			speaker.setImageResource(R.drawable.speaker_selected);
 			LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
+			//add by wzb
+			sendBroadcast(new Intent("com.android.custom.hall_down"));
+			//end
 		} else {
 			Log.d("Toggle speaker off, routing back to earpiece");
 			LinphoneManager.getInstance().routeAudioToReceiver();
 			speaker.setImageResource(R.drawable.speaker_default);
+			//add by wzb
+			sendBroadcast(new Intent("com.android.custom.hall_up"));
+			//end
 		}
 	}
 
@@ -928,7 +945,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		}
 	}
 
-	private void hangUp() {
+	public void hangUp() {
 		LinphoneCore lc = LinphoneManager.getLc();
 		LinphoneCall currentCall = lc.getCurrentCall();
 

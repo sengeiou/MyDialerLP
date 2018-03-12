@@ -124,6 +124,30 @@ public class DialerCoreReceiver extends BroadcastReceiver{
 
 
     private void hall_up(){
+
+        switch_to_hand_audio();
+
+        LinphoneManager.getLc().enableSpeaker(false);
+        if(CallActivity.isInstanciated()){
+            CallActivity.instance().refreshSpeaker();
+        }
+    }
+
+    private void hall_down(){
+        switch_to_android_audio();
+
+        if(LinphoneManager.getLc().isSpeakerEnabled()){
+            return;
+        }else{
+            if(CallActivity.isInstanciated()){
+                CallActivity.instance().hangUp();
+            }
+        }
+
+
+    }
+
+    private void switch_to_hand_audio(){
         GpioCtrl.gpioSet(87,1);
         GpioCtrl.gpioSet(95,0);
 
@@ -131,13 +155,14 @@ public class DialerCoreReceiver extends BroadcastReceiver{
         GpioCtrl.gpioSet(1,1);
     }
 
-    private void hall_down(){
+    private void switch_to_android_audio(){
         GpioCtrl.gpioSet(1,0);
 
 
         GpioCtrl.gpioSet(60,1);
         GpioCtrl.gpioSet(95,1);
     }
+
 
 
     private void callOutgoing(Context context,String number,String name) {
