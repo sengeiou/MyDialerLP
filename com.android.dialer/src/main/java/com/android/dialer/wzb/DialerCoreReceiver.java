@@ -98,7 +98,7 @@ public class DialerCoreReceiver extends BroadcastReceiver{
             hall_up();
 
             //test transfer
-            LinphoneManager.getLc().transferCall(LinphoneManager.getLc().getCurrentCall(),"216");
+            //LinphoneManager.getLc().transferCall(LinphoneManager.getLc().getCurrentCall(),"216");
             //end
             //test record
            // String temp_date=new SimpleDateFormat("yyyyMMddHHmmss")
